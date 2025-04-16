@@ -37,9 +37,30 @@ function MONT3R_ENV:BuildFovCircle(Properties)
     }
 
     local Section = Config.Section 
+    local Flag = Config.Flag
     Section:toggle({name = "use fov", flag = Flag .. "_fov_use"})
-    Section:toggle({name = "show fov", flag = Flag .. "_fov_show"})
-    Section:keybind({flag = Flag .. "_fov_show_keybind"})
-
-    
+    Section:keybind({flag = Flag .. "_fov_use_keybind"})
+    Section:toggle({name = "show fov", flag = Flag .. "_fov_show", callback = function(Value)
+             setrenderproperty(Config.Circle, "Visible", Value)
+    end})
+    Section:colorpicker({flag = Flag .. "_fov_color", color = Config.Color, alpha = 0, callback = function(Value)
+             setrenderproperty(Config.Circle, "Color", Value)
+    end})
+    Section:toggle({name = "show fov outline", flag = Flag .. "_fov_outline_show", callback = function(Value)
+            		setrenderproperty(Config.OutlineCircle, "Visible", Value)
+    end})
+    Section:colorpicker({flag = Flag .. "_fov_outline_color", color = Config.OutlineColor, callback = function(Value)
+        						setrenderproperty(Config.OutlineCircle, "Color", Value)
+    end})
+    Section:slider({name = "fov radius", max = 360, default = 180, suffix = " pixels", flag = Flag .. "_fov_radius", callback = function(Value)
+              setrenderproperty(Config.Circle, "Radius", Value)
+        						setrenderproperty(Config.OutlineCircle, "Radius", Value)
+    end})
+    Section:dropdown({name = "fov position", items = {"center", "mouse"}, flag = Flag .. "_fov_position", callback = function(Value)
+        						if Value == "center" then 
+        						    local size = workspace.CurrentCamera.ViewportSize
+        						    setrenderproperty(Config.Circle, "Position", Vector2.new(size.X / 2, size.Y / 2))
+        						    setrenderproperty(Config.OutlineCircle, "Position", Vector2.new(size.X / 2, size.Y / 2))
+        						end
+    end})
 end 
