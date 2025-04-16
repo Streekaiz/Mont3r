@@ -1,5 +1,16 @@
-MONT3R_ENV = getgenv().MONT3R_ENV or {}
-function MONT3R_ENV:BuildAimAssist(Section, Flag)
+local Library = {}
+
+function Library:BuildTabs(Window, Tabs)
+    local Stored = {}
+    for i, v in ipairs(Tabs) do 
+        Window:tab({name = v})
+        Stored[i] = v 
+    end 
+
+    return Stored
+end 
+
+function Library:BuildAimAssist(Section, Flag)
     Section:toggle({name = "enabled", flag = Flag .. "_aim_enabled"})
     Section:keybind({listname = "aim assist", flag = Flag .. "_aim_key"})
     Section:toggle({name = "require mouse movement", flag = Flag .. "_aim_require"})
@@ -14,7 +25,7 @@ function MONT3R_ENV:BuildAimAssist(Section, Flag)
     Section:slider({name = "y prediction factor", max = 5, flag = Flag .. "_aim_prediction_y"})
 end 
 
-function MONT3R_ENV:BuildSilentAim(Section, Flag)
+function Library:BuildSilentAim(Section, Flag)
     Section:toggle({name = "enabled", flag = Flag .. "_silent_enabled"})
     Section:keybind({listname = "projectile manipulation", flag = Flag .. "_silent_key"})
     Section:toggle({name = "require mouse movement", flag = Flag .. "_silent_require"})
@@ -27,7 +38,7 @@ function MONT3R_ENV:BuildSilentAim(Section, Flag)
     Section:slider({name = "hit chance", max = 100, default = 100, suffix = "%", flag = Flag .. "_silent_chance"})
 end 
 
-function MONT3R_ENV:BuildFovCircle(Properties)
+function Library:BuildFovCircle(Properties)
     local Config = {
         Section = Properties.Section or Properties.section or nil,
         Flag = Properties.Flag or Properties.flag or "stuff",
@@ -66,7 +77,7 @@ function MONT3R_ENV:BuildFovCircle(Properties)
     end})
 end 
 
-function MONT3R_ENV:BuildLocalPlayer(Section, Flag)
+function Library:BuildLocalPlayer(Section, Flag)
     Section:toggle({name = "speed changer", flag = Flag .. "_local_speed_enabled"})
     Section:keybind({listname = "speed", flag = Flag .. "_local_speed_key"})
     Section:dropdown({name = "speed method", items = {"normal", "cframe"}, flag = Flag .. "_local_speed_method"})
@@ -79,7 +90,7 @@ function MONT3R_ENV:BuildLocalPlayer(Section, Flag)
     Section:slider({name = "fly speed", min = 1, max = 100, flag = Flag .. "_local_fly_speed"})
 end
 
-function MONT3R_ENV:BuildBloom(Section, Flag, Bloom)
+function Library:BuildBloom(Section, Flag, Bloom)
     Bloom = Bloom or Instance.new("BloomEffect", cloneref(game:GetService("Lighting")))
     Section:toggle({name = "enabled", flag = Flag .. "_bloom_enabled", callback = function(Value)
         Bloom.Enabled = Value
@@ -95,7 +106,7 @@ function MONT3R_ENV:BuildBloom(Section, Flag, Bloom)
     end})
 end
 
-function MONT3R_ENV:BuildColor(Section, Flag, Color)
+function Library:BuildColor(Section, Flag, Color)
     Color = Color or Instance.new("ColorCorrectionEffect", cloneref(game:GetService("Lighting")))
     Section:toggle({name = "enabled", flag = Flag .. "_color_enabled", callback = function(Value)
         Color.Enabled = Value
@@ -114,7 +125,7 @@ function MONT3R_ENV:BuildColor(Section, Flag, Color)
     end})
 end 
 
-function MONT3R_ENV:BuildRender(Tab, Path)
+function Library:BuildRender(Tab, Path)
     local Path = Path or MONT3R_ENV.RENDER or MONT3R_ENV:GETRENDER() or {}
     local Enemy, Friendly = Tab:section({name = "enemy"}), Tab:section({name = "friendly", side = "right"})
 
@@ -128,4 +139,4 @@ function MONT3R_ENV:BuildRender(Tab, Path)
     end 
 end
 
-return MONT3R_ENV
+return Library
