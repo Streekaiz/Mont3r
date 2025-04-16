@@ -79,7 +79,7 @@ function MONT3R_ENV:BuildLocalPlayer(Section, Flag)
 end
 
 function MONT3R_ENV:BuildBloom(Section, Flag, Bloom)
-    local Bloom = Bloom or Instance.new("BloomEffect", cloneref(game:GetService("Lighting")))
+    Bloom = Bloom or Instance.new("BloomEffect", cloneref(game:GetService("Lighting")))
     Section:toggle({name = "enabled", flag = Flag .. "_bloom_enabled", callback = function(Value)
         Bloom.Enabled = Value
     end})
@@ -95,7 +95,7 @@ function MONT3R_ENV:BuildBloom(Section, Flag, Bloom)
 end
 
 function MONT3R_ENV:BuildColor(Section, Flag, Color)
-    local Color = Color or Instance.new("ColorCorrectionEffect", cloneref(game:GetService("Lighting")))
+    Color = Color or Instance.new("ColorCorrectionEffect", cloneref(game:GetService("Lighting")))
     Section:toggle({name = "enabled", flag = Flag .. "_color_enabled", callback = function(Value)
         Color.Enabled = Value
     end})
@@ -115,7 +115,7 @@ end
 
 function MONT3R_ENV:BuildRender(Tab, Path)
     local Path = Path or MONT3R_ENV.RENDER or MONT3R_ENV:GETRENDER() or {}
-    local Enemy, Friendly = Tab:section({name = "enemy"}), Tab:Section({name = "friendly", side = "right"})
+    local Enemy, Friendly = Tab:section({name = "enemy"}), Tab:section({name = "friendly", side = "right"})
 
     local function TextElement(Section, Flag, Type, TextPath)
         Section:toggle({name = Type, flag = Flag .. "_enabled"})
