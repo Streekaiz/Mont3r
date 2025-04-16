@@ -125,6 +125,53 @@ function Library:BuildColor(Section, Flag, Color)
     end})
 end 
 
+function Library:BuildCamera(Section, Flag)
+    Section:toggle({name = "field of view changer", flag = Flag .. "_fov_enabled"})
+    Section:slider({name = "field of view value", min = 0, max = 120, default = 70, flag = Flag .. "_fov_value"})
+    Section:toggle({name = "zoom", flag = Flag .. "_zoom_enabled"})
+    Section:keybind({listname = "zoom", flag = Flag .. "_zoom_key"})
+    Section:slider({name = "zoom field of view", min = 0, max = 120, default = 30, flag = Flag .. "_zoom_value"})
+    Section:toggle({name = "third person", flag = Flag .. "_3rdperson_enabled"})
+    Section:keybind({listname = "third person", flag = Flag .. "_3rdperson_key"})
+    Section:dropdown({name = "third person method", items = {"camera", "hookmetamethod"}, default = "hookmetamethod", flag = Flag .. "_3rdperson_method"})
+    Section:slider({name = "third person distance", min = 0, max = 12, default = 3, intervals = 3, flag = Flag .. "_3rdperson_distance"})
+    Section:slider({name = "minimum zoom distance", min = 0, max = 2500, default = workspace.CurrentCamera.MinimumZoomDistance, flag = Flag .. "_zoomdistance_min"})
+    Section:slider({name = "maximum zoom distance", min = 0, max = 2500, default = workspace.CurrentCamera.MaximumZoomDistance, flag = Flag .. "_zoomdistance_max"})
+end 
+
+function Library:BuildRagebot(Section, Flag)
+    Section:toggle({name = "enabled", color = Color3.fromRGB(255, 100, 100), flag = "_ragebot_enabled"})
+    Section:keybind({listname = "ragebot", flag = Flag .. "_ragebot_key"})
+    Section:toggle({name = "ignore obstacles", flag = Flag .. "_ignore"})
+    Section:dropdown({name = "raycast scan type", items = {"normal", "advaanced"}, flag = Flag .. "_ragebot_scan_type"})
+    Section:dropdown({name = "add to scan whitelist", items = {"cancollide", "transparency"}, multi = true, default = {"cancollide"}, flag = Flag .. "_ragebot_scan_ignore"})
+    Section:dropdown({name = "origin", items = {"camera", "character"}, default = "character", flag = Flag .. "_ragebot_origin"})
+    Section:toggle({name = "force hit", flag = Flag .. "_ragebot_force"})
+    Section:toggle({name = "aim for body", flag = Flag .. "_ragebot_baim_enabled"})
+    Section:keybind({listname = "body aim", flag = Flag .. "_ragebot_baim_key"})
+    Section:dropdown({name = "automatic fire", items = {"off", "on visible", "always"}, default = "on visible", flag = Flag .. "_ragebot_auto"})
+    Section:toggle({name = "double tap", flag = Flag .. "_ragebot_double_enabled"})
+    Section:keybind({listname = "double tap", flag = Flag .. "_ragebot_double_key"})
+    Section:toggle({name = "notify on hit", flag = Flag .. "_ragebot_notify"})
+end 
+
+function Library:BuildCharacter(Section, Flag)
+    Section:toggle({name = "enabled", flag = Flag .. "_antiaim_enabled"})
+    Section:keybind({listname = "anti aim", flag = Flag .. "_antiaim_key"})
+    Section:dropdown({name = "yaw modifier", items = {"camera", "spin", "random"}, flag = Flag .. "_antiaim_yaw_modifier"})
+    Section:slider({name = "yaw degree", min = -180, max = 180, default = 0, suffix = " degrees", flag = Flag .. "_antiaim_yaw_value"})
+    Section:dropdown({name = "offset yaw modifier", items = {"none", "jitter", "offset jitter"}, flag = Flag .. "_antiaim_offset_yaw_modifier"})
+    Section:slider({name = "offset yaw degree", min = -180, max = 180, default = 0, suffix = " degrees", flag = Flag .. "_antiaim_offset_yaw_value"})
+end 
+
+function Library:BuildLag(Section, Flag)
+    Section:toggle({name = "enabled", flag = Flag .. "_fakelag_enabled"})
+    Section:dropdown({name = "method", items = {"static", "random"}, flag = Flag .. "_fakelag_method"})
+    Section:slider({name = "limit", min = 0, max = 12, default = 8, flag = Flag .. "_fakelag_limit"})
+    Section:toggle({name = "freeze packets", flag = Flag .. "_fakelag_freeze_enabled"})
+    Section:keybind({listname = "freeze packets", flag = Flag .. "_fakelag_freeze_key"})
+end 
+
 function Library:BuildRender(Tab, Path)
     local Path = Path or MONT3R_ENV.RENDER or MONT3R_ENV:GETRENDER() or {}
     local Enemy, Friendly = Tab:section({name = "enemy"}), Tab:section({name = "friendly", side = "right"})
