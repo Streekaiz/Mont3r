@@ -1,3 +1,4 @@
+MONT3R_ENV = getgenv().MONT3R_ENV or {}
 function MONT3R_ENV:BuildAimAssist(Section, Flag)
     Section:toggle({name = "enabled", flag = Flag .. "_aim_enabled"})
     Section:keybind({listname = "aim assist", flag = Flag .. "_aim_key"})
@@ -126,3 +127,5 @@ function MONT3R_ENV:BuildRender(Tab, Path)
         
     end 
 end
+
+return MONT3R_ENV
