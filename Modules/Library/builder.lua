@@ -10,6 +10,40 @@ function Library:BuildTabs(Window, Tabs)
     return Stored
 end 
 
+function Library:BuildTab(Window, Type)
+    Type = Type and string.lower(Type) or "legit"
+    local Tab = Window:tab({name = Type})
+    if Type == "legit" then 
+        local Aim = Tab:section({name = "aim assist"})
+        local Hitpart = Tab:hitpart_picker({name = "target priority", type = "R15", flag = Type .. "_target"})
+        local Silent = Tab:section({name = "projectile manipulation", side = "right"})
+        self:BuildAimAssist(Aim, Type)
+        self:BuildSilentAim(Silent, Type)
+        self:BuildFovCircle({
+            Section = Aim,
+            Flag = Type
+        })
+        self:BuildFovCircle({
+            Section = Silent,
+            Flag = "Type
+        })
+        return Tab, Aim, Silent
+    elseif Type == "rage" then 
+        Tab:hitpart_picker({name = "target priority", flag = Type .. "_target"})
+        local Bot, Character, Lag = Tab:section({name = "rage bot"}), Tab:section({name = "anti aim", side = "right"}), Tab:section({name = "desync", side = "right"})
+        self:BuildRagebot(Bot, Type)
+        self:BuildCharacter(Character, Type)
+        self:BuildCharacter(Lag, Type)
+    elseif Type == "esp" then 
+
+    elseif Type == "visual" then 
+        local Camera, World, Color, Bloom = Tab:section({name = "camera"}), Tab:section({name = "world", side = "right"}), Tab:section({name = "color correction"}), Tab:section({name = "bloom effect", side = "right"})
+        
+    elseif Type == "misc" then 
+
+    end 
+end 
+
 function Library:BuildAimAssist(Section, Flag)
     Section:toggle({name = "enabled", flag = Flag .. "_aim_enabled"})
     Section:keybind({listname = "aim assist", flag = Flag .. "_aim_key"})
@@ -184,6 +218,14 @@ function Library:BuildRender(Tab, Path)
         local Section = string.find(v, "enemy") and Enemy or Friendly 
         
     end 
+
+    return Enemy, Friendly 
 end
+
+if getgenv().MONT3R_ENV then 
+    if getgenv().MONT3R_ENV.Library then 
+        getgenv().MONT3R_ENV.Library.Builder = Library 
+    end 
+end 
 
 return Library
