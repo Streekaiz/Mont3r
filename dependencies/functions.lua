@@ -41,7 +41,7 @@ local mathHuge = math.huge
 local library = {
     author = "Streekaiz",
     repo = "yurr",
-    
+
     connections = {},
     drawings = {},
     instances = {},

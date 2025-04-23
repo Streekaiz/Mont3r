@@ -1,1 +1,3 @@
-local env = getgenv and getgenv or _G 
+local function retriveDependencies()
+
+end 
