@@ -18,6 +18,7 @@ local services = {}; setmetatable(services, {__index = function(_, service) retu
 local players = services.Players 
 local userInputService = services.UserInputService
 local runService = services.RunService 
+local tweenService = services.TweenService 
 
 local localPlayer = players.LocalPlayer 
 local camera = workspace.CurrentCamera
@@ -30,6 +31,7 @@ local worldToViewportPoint = camera.WorldToViewportPoint
 local worldToScreenPoint = camera.WorldToScreenPoint 
 local getPlayers = players.GetPlayers
 local isA = workspace.IsA
+local tweenInfo = TweenInfo.new 
 
 local mathHuge = math.huge 
 
@@ -200,6 +202,96 @@ local library = {
         library = nil 
     end 
 end 
+
+do --## Tween ##
+    function Library.Tween.new(instance, properties, duration, easingStyle, easingDirection)
+    end
+
+    function Library.Tween:Initalize()
+        local tweenInfo = TweenInfo.new(
+            self.duration,
+            self.easingStyle,
+            self.easingDirection
+        )
+        self.tween = tweenService:Create(self.instance, tweenInfo, self.properties)
+    end
+
+    function Library.Tween:Play()
+        if self.tween then
+            self.tween:Play()
+            if self.onPlay then
+                self.onPlay(self)
+            end
+        end
+    end
+
+    function Library.Tween:Pause()
+        if self.tween then
+            self.tween:Pause()
+            if self.onPause then
+                self.onPause(self)
+            end
+        end
+    end
+
+    function Library.Tween:Cancel()
+        if self.tween then
+            self.tween:Cancel()
+            if self.onCancel then
+                self.onCancel(self)
+            end
+        end
+    end
+
+    function Library.Tween:Destroy()
+        if self.tween then
+            self.tween:Destroy()
+            if self.onDestroy then
+                self.onDestroy(self)
+            end
+            self.tween = nil
+        end
+    end
+
+    function Library.Tween:setCallback(event, callback)
+        if event == "Play" then
+            self.onPlay = callback
+        elseif event == "Pause" then
+            self.onPause = callback
+        elseif event == "Cancel" then
+            self.onCancel = callback
+        elseif event == "Destroy" then
+            self.onDestroy = callback
+        end
+    end
+
+    function Library.Tween:Create(instance, properties, duration, easingStyle, easingDirection)
+        local Tween = Library.Tween.new(instance, properties, duration, easingStyle, easingDirection)
+        Tween:Initalize()
+        Tween:Play()
+        return Tween
+    end
+
+    --[=[ Documentation
+        local myTween = Library.Tween:create(instance, {Position = UDim2.new(0, 100, 0, 100)}, 2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+
+        myTween:setCallback("Play", function(self)
+            print("Tween started")
+        end)
+
+        myTween:setCallback("Pause", function(self)
+            print("Tween paused")
+        end)
+
+        myTween:setCallback("Cancel", function(self)
+            print("Tween canceled")
+        end)
+
+        myTween:setCallback("Destroy", function(self)
+            print("Tween destroyed")
+        end)
+    ]=]
+end
 
 -- // connecting player events & adding them to a table
 -- // might have some use later?
