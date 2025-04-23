@@ -1,9 +1,9 @@
 -- // setting up functions that might not be supported in a env / rstudio environment 
-local setrenderproperty = setrenderproperty or function(drawing, key, value)
+local setrenderproperty = setrenderproperty or function(drawing : string, key : any, value : any)
     drawing[key] = value 
 end
 
-local cloneref = cloneref or function(instance)
+local cloneref = cloneref or function(instance : any)
     return instance 
 end 
 
@@ -19,6 +19,7 @@ local players = services.Players
 local userInputService = services.UserInputService
 local runService = services.RunService 
 local tweenService = services.TweenService 
+local coreGui = services.CoreGui
 
 local localPlayer = players.LocalPlayer 
 local camera = workspace.CurrentCamera
@@ -38,6 +39,9 @@ local mathHuge = math.huge
 
 -- // library init
 local library = {
+    author = "Streekaiz",
+    repo = "yurr",
+    
     connections = {},
     drawings = {},
     instances = {},
@@ -77,12 +81,21 @@ local library = {
     end 
 
     function library.ensureFolder(path)
-        if not isfolder(path) then makefolder(path) end 
+        if not isfolder(path) then 
+            makefolder(path)
+            return path 
+        end 
     end 
 
     function library.ensureFile(path, content)
         if not isfile(path) then 
-            writefile(path, content)
+            local success, content = pcall(writefile(path, content))
+            if success then 
+                return path 
+            else
+                warn("error writing to " .. path .. "; " .. content)
+                return path 
+            end 
         end 
     end 
 
