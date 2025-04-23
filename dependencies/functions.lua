@@ -32,6 +32,7 @@ local worldToScreenPoint = camera.WorldToScreenPoint
 local getPlayers = players.GetPlayers
 local isA = workspace.IsA
 local tweenInfo = TweenInfo.new 
+local findPartOnRayWithIgnoreList = workspace.FindPartOnRayWithIgnoreList
 
 local mathHuge = math.huge 
 
@@ -43,8 +44,48 @@ local library = {
 
     players = {},
 
-    unloadFunctions = {},
+    unloadFunctions = {
+        removeDrawings = function()
+            if cleardrawingcache then 
+                cleardrawingcache()
+            else
+                for i, v in ipairs(drawings) do
+                    v:Destroy()
+                end 
+            end 
+        end,
+        removeInstances = function()
+            for i, v in ipairs(instances) do 
+                v:Destroy() 
+            end 
+        end
+    },
 }; do -- // creating library functions
+    function library.downloadFile(path, data)
+        local success, content = pcall(function()
+            return game:HttpGet(data)
+        end)
+
+        if success then 
+            writefile(path, content)
+        else
+            warn("error writing to " .. path .. "; " .. content)
+            return 
+        end 
+
+        return content 
+    end 
+
+    function library.ensureFolder(path)
+        if not isfolder(path) then makefolder(path) end 
+    end 
+
+    function library.ensureFile(path, content)
+        if not isfile(path) then 
+            writefile(path, content)
+        end 
+    end 
+
     function library.connect(signal, callback, index)
         if not signal or callback then return end 
         -->
@@ -124,6 +165,12 @@ local library = {
         return library.getTeam(first) == (second and library.getTeam(second)) or library.getTeam(localPlayer)
     end 
 
+    function library.isVisible(origin, position, accuracy, ignore)
+        local hit, pos = findPartOnRayWithIgnoreList(Ray.new(origin, (position - origin).Unit * (position - origin).Magnitude), ignore, false, true)
+
+        return (pos - position).Magnitude <= accuracy, hit, pos
+    end 
+
     function library.getMouseLocation()
         return userInputService:GetMouseLocation()
     end 
@@ -195,6 +242,50 @@ local library = {
         return parts
     end
 
+    function library.scan(insert)
+        return {
+            insert.Position + (Vector3.new(insert.Size.X, 0, 0) / 2),
+            insert.Position - (Vector3.new(insert.Size.X, 0, 0) / 2),
+            insert.Position + (Vector3.new(0, insert.Size.Y, 0) / 2),
+            insert.Position - (Vector3.new(0, insert.Size.Y, 0) / 2),
+            insert.Position + (Vector3.new(0, 0, insert.Size.Z) / 2),
+            insert.Position - (Vector3.new(0, 0, insert.Size.Z) / 2),
+            insert.Position,
+        }
+    end 
+
+    function library.scanAdvanced(insert)
+        return {
+            insert.Position + (Vector3.new(insert.Size.X, 0, 0) / 2),
+            insert.Position - (Vector3.new(insert.Size.X, 0, 0) / 2),
+            insert.Position + (Vector3.new(0, insert.Size.Y, 0) / 2),
+            insert.Position - (Vector3.new(0, insert.Size.Y, 0) / 2),
+            insert.Position + (Vector3.new(0, 0, insert.Size.Z) / 2),
+            insert.Position - (Vector3.new(0, 0, insert.Size.Z) / 2),
+            insert.Position + (Vector3.new(insert.Size.X, insert.Size.Y, 0) / 2),
+            insert.Position - (Vector3.new(insert.Size.X, insert.Size.Y, 0) / 2),
+            insert.Position + (Vector3.new(0, insert.Size.Y, insert.Size.Z) / 2),
+            insert.Position - (Vector3.new(0, insert.Size.Y, insert.Size.Z) / 2),
+            insert.Position + (Vector3.new(insert.Size.X, 0, insert.Size.Z) / 2),
+            insert.Position - (Vector3.new(insert.Size.X, 0, insert.Size.Z) / 2),
+            insert.Position + (Vector3.new(-insert.Size.X, insert.Size.Y, 0) / 2),
+            insert.Position + (Vector3.new(insert.Size.X, -insert.Size.Y, 0) / 2),
+            insert.Position + (Vector3.new(0, -insert.Size.Y, insert.Size.Z) / 2),
+            insert.Position + (Vector3.new(0, insert.Size.Y, -insert.Size.Z) / 2),
+            insert.Position + (Vector3.new(-insert.Size.X, 0, insert.Size.Z) / 2),
+            insert.Position + (Vector3.new(insert.Size.X, 0, -insert.Size.Z) / 2),
+            insert.Position + (Vector3.new(-insert.Size.X, insert.Size.Y, insert.Size.Z) / 2),
+            insert.Position + (Vector3.new(insert.Size.X, -insert.Size.Y, insert.Size.Z) / 2),
+            insert.Position + (Vector3.new(insert.Size.X, insert.Size.Y, -insert.Size.Z) / 2),
+            insert.Position + (Vector3.new(-insert.Size.X, -insert.Size.Y, insert.Size.Z) / 2),
+            insert.Position + (Vector3.new(insert.Size.X, -insert.Size.Y, -insert.Size.Z) / 2),
+            insert.Position + (Vector3.new(-insert.Size.X, insert.Size.Y, -insert.Size.Z) / 2),
+            insert.Position + (insert.Size / 2),
+            insert.Position - (insert.Size / 2),
+            insert.Position,
+        }
+    end
+
     function library.unload()
         for _, v in ipairs(library.unloadFunctions) do 
             v()
@@ -202,96 +293,6 @@ local library = {
         library = nil 
     end 
 end 
-
-do --## Tween ##
-    function Library.Tween.new(instance, properties, duration, easingStyle, easingDirection)
-    end
-
-    function Library.Tween:Initalize()
-        local tweenInfo = TweenInfo.new(
-            self.duration,
-            self.easingStyle,
-            self.easingDirection
-        )
-        self.tween = tweenService:Create(self.instance, tweenInfo, self.properties)
-    end
-
-    function Library.Tween:Play()
-        if self.tween then
-            self.tween:Play()
-            if self.onPlay then
-                self.onPlay(self)
-            end
-        end
-    end
-
-    function Library.Tween:Pause()
-        if self.tween then
-            self.tween:Pause()
-            if self.onPause then
-                self.onPause(self)
-            end
-        end
-    end
-
-    function Library.Tween:Cancel()
-        if self.tween then
-            self.tween:Cancel()
-            if self.onCancel then
-                self.onCancel(self)
-            end
-        end
-    end
-
-    function Library.Tween:Destroy()
-        if self.tween then
-            self.tween:Destroy()
-            if self.onDestroy then
-                self.onDestroy(self)
-            end
-            self.tween = nil
-        end
-    end
-
-    function Library.Tween:setCallback(event, callback)
-        if event == "Play" then
-            self.onPlay = callback
-        elseif event == "Pause" then
-            self.onPause = callback
-        elseif event == "Cancel" then
-            self.onCancel = callback
-        elseif event == "Destroy" then
-            self.onDestroy = callback
-        end
-    end
-
-    function Library.Tween:Create(instance, properties, duration, easingStyle, easingDirection)
-        local Tween = Library.Tween.new(instance, properties, duration, easingStyle, easingDirection)
-        Tween:Initalize()
-        Tween:Play()
-        return Tween
-    end
-
-    --[=[ Documentation
-        local myTween = Library.Tween:create(instance, {Position = UDim2.new(0, 100, 0, 100)}, 2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-
-        myTween:setCallback("Play", function(self)
-            print("Tween started")
-        end)
-
-        myTween:setCallback("Pause", function(self)
-            print("Tween paused")
-        end)
-
-        myTween:setCallback("Cancel", function(self)
-            print("Tween canceled")
-        end)
-
-        myTween:setCallback("Destroy", function(self)
-            print("Tween destroyed")
-        end)
-    ]=]
-end
 
 -- // connecting player events & adding them to a table
 -- // might have some use later?

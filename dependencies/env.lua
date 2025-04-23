@@ -1,0 +1,1 @@
+local env = getgenv and getgenv or _G 
