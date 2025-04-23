@@ -67,14 +67,16 @@ local library = {
         return drawing 
     end 
 
-    function library.instance(class, properties, index)
+    function library.instance(class, parent, properties, index)
         local instance = newInstance(class)
         index = index or #library.instances + 1 
 
         for i, v in ipairs(properties) do 
             setrenderproperty(instance, i, v)
-        end; library.instances[index] = instance 
+        end; library.instances[index] = instance; 
 
+        instance.Parent = parent 
+        
         return instance 
     end 
 
