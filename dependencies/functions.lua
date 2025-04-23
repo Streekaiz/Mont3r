@@ -1,4 +1,3 @@
-
 -- // setting up functions that might not be supported in a env / rstudio environment 
 local setrenderproperty = setrenderproperty or function(drawing, key, value)
     drawing[key] = value 
