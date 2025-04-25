@@ -101,13 +101,13 @@ local library = {
 
     function library.connect(signal, callback, index)
         if not signal or callback then return end 
-        -->
+        
         index = index or #library.connections+1
-        -->
+        
         local connection = signal:Connect(callback)
-        -->
+        
         library.connections[index]
-        -->
+        
         return connection  
     end 
 
