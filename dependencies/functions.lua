@@ -47,6 +47,7 @@ local library = {
     instances = {},
 
     players = {},
+    preloadedImages = {},
 
     unloadFunctions = {
         removeDrawings = function()
@@ -297,6 +298,14 @@ local library = {
             insert.Position - (insert.Size / 2),
             insert.Position,
         }
+    end
+
+    function library.preloadImage(link)
+        local data = library.preloadedImages[link] or game:HttpGet(link)
+        if library.preloadedImages[link] == nil then
+            library.preloadedImages[link] = data
+        end
+        return data
     end
 
     function library.unload()
