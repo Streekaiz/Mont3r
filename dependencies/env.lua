@@ -48,11 +48,6 @@ do
             end
         end
     end
-
-    -- Assets (Placeholder)
-    do
-        -- Add assets logic here if needed
-    end
 end
 
 return env
