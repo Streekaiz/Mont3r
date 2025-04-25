@@ -1,5 +1,6 @@
 local mont3rEnv = isfile("Mont3r/environment.lua") and readfile("Mont3r/environment.lua") or loadstring(game:HttpGet("https://placeholder"))()
 local funcs = mont3rEnv.utilites.functions
+local connections = mont3rEnv.connections 
 
 --[[
     local services = {}; setmetatable(services, {
@@ -50,6 +51,41 @@ local function getRemotes(object)
     end 
 
     return cache 
+end 
+
+local function connectCheckHandler(object)
+    
+    local success, message 
+    success, message = pcall(function()
+        funcs.connect(object.ChildAdded, function(child)
+            if string.find(child.Name, localPlayer.Name) then 
+                remotes.skillCheck("Hit", child)
+            end 
+        end, "checkHandler")
+    end
+
+    if not success then 
+        warn("connectCheckHandler : failed to write to childAdded, " .. message)
+        return 
+    end 
+
+    success, message = pcall(function()
+        funcs.connect(object.descendant, function()
+            if object.Parent == nil then
+                if connections["checkHandler"] then 
+                    connections["checkHandler"]:Disconnect()
+                    connections["checkDescendantHandler"]:Disconnect()
+                end 
+            end 
+        end, "checkDescendantHandler") -- signal placeholder; change later
+    end 
+
+    if not success then 
+        warn("connectCheckHandler : failed to write to descendant event, " .. message)
+        return 
+    end 
+    
+    return 
 end 
 
 local survivorAnimations, killerAnimations = { names = {}, assets = {} }, { names = {}, assets = {} }; do 
