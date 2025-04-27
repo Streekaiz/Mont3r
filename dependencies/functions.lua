@@ -1,3 +1,11 @@
+--[[
+    to do list!!
+        replace Vector3.new with newVector3
+        replace Vector2.new with newVector2
+]]
+
+
+
 -- // setting up functions that might not be supported in a env / rstudio environment 
 local setrenderproperty = setrenderproperty or function(drawing : string, key : any, value : any)
     drawing[key] = value 
@@ -26,6 +34,9 @@ local camera = workspace.CurrentCamera
 
 local newInstance = Instance.new 
 local newDrawing = Drawing.new
+local newVector3 = Vector3.new 
+local newVector2 = Vector2.new 
+local wait = task.wait 
 local findFirstChild = workspace.FindFirstChild 
 local findFirstChildOfClass = workspace.FindFirstChildOfClass
 local worldToViewportPoint = camera.WorldToViewportPoint
@@ -34,17 +45,30 @@ local getPlayers = players.GetPlayers
 local isA = workspace.IsA
 local tweenInfo = TweenInfo.new 
 local findPartOnRayWithIgnoreList = workspace.FindPartOnRayWithIgnoreList
-
 local mathHuge = math.huge 
 
 -- // library init
 local library = {
+    debug = false, 
+
     author = "Streekaiz",
     repo = "yurr",
 
+    folder = "Mont3r",
+    folders = {
+        "functionData", 
+        "logs",
+            "logs/info",
+            "logs/warning",
+            "logs/errors",
+            "logs/executions",
+        
+    },
+    
     connections = {},
     drawings = {},
     instances = {},
+    signals = {},
 
     players = {},
     preloadedImages = {},
@@ -66,6 +90,10 @@ local library = {
         end
     },
 }; do -- // creating library functions
+    function library.log(file, content, to)
+        writefile(library.directory .. "/" .. to .. "/" .. file, content)
+    end 
+    
     function library.downloadFile(path, data)
         local success, content = pcall(function()
             return game:HttpGet(data)
@@ -134,6 +162,20 @@ local library = {
         instance.Parent = parent 
         
         return instance 
+    end 
+
+    function library.saveData(name, data)
+        data = httpService:JSONEncode(data)
+
+        if data then 
+            writefile(library.folder .. "/functionData/" .. name, data) 
+        end
+        
+        return data 
+    end 
+
+    function library.getData(name)
+        return httpService:JSONDecode(readfile(library.folder .. "/functionData/" .. name))
     end 
 
     function library.getCharacter(player)
@@ -308,9 +350,33 @@ local library = {
         return data
     end
 
+    function library.scheduleTask(func, delay)
+        coroutine.wrap(function()
+            wait(delay)
+            
+            pcall(func)
+        end)
+    end 
+
+    function library.addSignal(signal, func)
+        library.signals[signal] = func 
+    end 
+
+    function library.deleteSignal(signal)
+        library.signals[signal] = nil 
+    end 
+
+    function library.fireSignal(signal)
+        for _, v in ipairs(library.signals) do 
+            if _ == signal then 
+                task.spawn(v)
+            end 
+        end 
+    end 
+
     function library.unload()
         for _, v in ipairs(library.unloadFunctions) do 
-            v()
+            task.spawn(v)
         end
         library = nil 
     end 
@@ -320,18 +386,18 @@ end
 -- // might have some use later?
 for _, v in ipairs(getPlayers()) do 
     if v ~= localPlayer then
-        library.players[_] = v 
+        table.insert(library.players, v)
     end 
 end 
 
 library.connect(players.PlayerAdded, function(player)
-    library.players[#library.players + 1] = player 
+    table.insert(library.players, player)
 end)
 
 library.connect(players.PlayerRemoving, function(player)
     for _, v in ipairs(library.players) do 
         if v == player then 
-            table.remove(library.players, _)
+            table.remove(library.players, player)
         end 
     end 
 end)
