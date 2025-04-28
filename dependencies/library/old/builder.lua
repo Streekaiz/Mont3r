@@ -133,7 +133,8 @@ local builder = {}; do
     
     function builder.lag(section)
         local baseFlag = "rage"
-        section:Toggle({name = "Enabled", flag = baseFlag .. "FakelagEnabled"}):Dropdown({name = "Method", content = {"Static", "Random"}, default = "Static", flag = baseFlag .. "FakelagMethod"})
+        section:Toggle({name = "Enabled", flag = baseFlag .. "FakelagEnabled"})
+        section:Dropdown({name = "Method", content = {"Static", "Random"}, default = "Static", flag = baseFlag .. "FakelagMethod"})
         section:Slider({name = "Limit", min = 0, max = 12, default = 8, float = 0.5, flag = baseFlag .. "FakelagLimit"})
         section:Toggle({name = "Freeze Packets", flag = baseFlag .. "FakelagFreezeEnabled"})
     end
