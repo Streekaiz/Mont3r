@@ -1,4 +1,4 @@
-local library, builder, saveManager, themeManager
+local library, builder, saveManager, themeManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/Streekaiz/Mont3r/refs/heads/main/dependencies/library/builder.lua", true))()
 
 local window = library:CreateWindow({
     Title = "Mont3r",
@@ -63,14 +63,25 @@ local window = library:CreateWindow({
             builder.setUpFov(sections.legit.aim, "legitAim")
             builder.setUpSilentAim(sections.legit.silent)
             builder.setUpFov(sections.legit.silent, "legitSilent")
-
-            
         end
 
         do -- // Rage
             builder.setUpRagebot(sections.rage.bot, "rageBot")
             builder.setUpCharacter(sections.rage.char, "rageAnti")
             builder.setUpLag(sections.rage.lag, "rageLag")
+        end 
+
+        do -- // Visuals
+            builder.setUpBloomEffect(sections.visual.bloom)
+            builder.setUpColorCorrectionEffect(sections.visual.color)
+            
+        end 
+
+        do -- // Misc 
+
+        end 
+
+        do -- // Settings 
 
         end 
     end
