@@ -2,7 +2,7 @@ local function load(url)
     return loadstring(game:HttpGet(url, true))()
 end 
 
-local repository = "https://raw.githubusercontent.com/devidcomsono/Obsidian/main/"
+local repository = "https://raw.githubusercontent.com/deividcomsono/Obsidian/main/"
 
 local library = load(repository .. "Library.lua")
 local saveManager, themeManager = load(repository .. "addons/SaveManager.lua"), load(repository .. "addons/ThemeManager.lua")
