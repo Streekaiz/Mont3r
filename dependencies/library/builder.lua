@@ -25,7 +25,7 @@ local builder = {}; do
         end 
 
         return tabs 
-    end 
+    end
 
     function builder.setUpFov(section, flag)
         flag = flag .. "Fov"
@@ -58,7 +58,6 @@ local builder = {}; do
         library.Toggles[flag .. "Show"]:OnChanged(function(value)
             library.Options[flag .. "Position"]:SetVisible(value)
         end)
-        
     end 
 
     function builder.setUpAimAssist(section, flag)

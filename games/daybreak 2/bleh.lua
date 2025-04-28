@@ -1,5 +1,6 @@
 local mont3rEnv = isfile("Mont3r/environment.lua") and readfile("Mont3r/environment.lua") or loadstring(game:HttpGet("https://placeholder"))()
 local funcs = mont3rEnv.utilites.functions
+local library = mont3rEnv.utilities.library.source 
 local connections = mont3rEnv.connections 
 
 --[[
@@ -26,10 +27,11 @@ local getChildren = workspace.getChildren
 
 local remotes = findFirstChild(replicatedStorage, "Remotes")
 
-local function getKiller()
+local function getKiller() humanoid.Health > 0, character, humanoidRootPart, humanoid 
     for i, v in ipairs(players:GetPlayers()) do 
-        if funcs.isAlive(v) then 
-            local weapon = findFirstChild(v.Character, "Weapon") 
+        local alive, char = funcs.isAlive(v)
+        if alive then 
+            local weapon = findFirstChild(char, "Weapon") 
             if weapon then
                 return v, weapon 
             end  
@@ -41,14 +43,6 @@ end
 
 local function getRemotes(object)
     local cache = {}
-
-    if object:IsA("Tool") then 
-        for i, v in ipairs(getChildren(object)) do 
-            if string.find(string.lower(v.Class), "remote") then 
-                cache[v.Name] = v 
-            end 
-        end 
-    end 
 
     return cache 
 end 
@@ -91,3 +85,5 @@ end
 local survivorAnimations, killerAnimations = { names = {}, assets = {} }, { names = {}, assets = {} }; do 
 
 end 
+
+

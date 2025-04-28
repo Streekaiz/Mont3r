@@ -8,7 +8,8 @@ local ui = rawRepo .. "/refs/heads/main/dependencies/library"
 local env = {
     utilities = {},
     library = {},
-    assets = {}
+    assets = {},
+    services = 
 }
 
 do
