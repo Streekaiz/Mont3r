@@ -363,5 +363,33 @@ local builder = {}; do
     end
 end 
 
-local window = library:CreateWindow({})
+-- Create the main window
+local window = library:CreateWindow({Title = "Obsidian UI Example"})
 
+-- Set up tabs
+local tabs = builder.setUpTabs(window)
+
+-- Example: Use the "main" tab for groupboxes and sections
+local mainTab = tabs["main"]
+
+-- Add left and right groupboxes
+local leftGroupbox = mainTab:AddLeftGroupbox("Left Groupbox")
+local rightGroupbox = mainTab:AddRightGroupbox("Right Groupbox")
+
+-- Apply builder functions on sections in the left groupbox
+builder.setUpFov(leftGroupbox, "example")
+builder.setUpAimAssist(leftGroupbox, "example")
+builder.setUpSilentAim(leftGroupbox)
+builder.setUpCharacter(leftGroupbox)
+builder.setUpLag(leftGroupbox)
+
+-- Apply builder functions on sections in the right groupbox
+builder.setUpRagebot(rightGroupbox)
+builder.setUpBloomEffect(rightGroupbox, "example")
+builder.setUpColorCorrectionEffect(rightGroupbox, "example")
+
+-- Save Manager and Theme Manager
+saveManager:SetLibrary(library)
+saveManager:BuildConfigSection(mainTab)
+themeManager:SetLibrary(library)
+themeManager:ApplyToTab(tabs["settings"])
