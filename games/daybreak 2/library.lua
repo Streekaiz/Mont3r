@@ -22,11 +22,11 @@ local window = library:CreateWindow({
                 home = tabs.home:AddLeftGroupbox("Changelogs"),
                 discord = tabs.home:AddRightGroupbox("Discord"),
                 client = tabs.home:AddRightGroupbox("Client")
-            }
+            },
             legit = {
                 aim = tabs.legit:AddLeftGroupbox("Aim Assist"),
                 silent = tabs.legit:AddRightGroupbox("Silent Aim"),
-                settings = tabs.legit:AddRightGroupbox("Settings")
+                settings = tabs.legit:AddRightGroupbox("Settings"),
                 indicator = tabs.legit:AddLeftGroupbox("Indicator")
             },
             rage = {
@@ -39,7 +39,7 @@ local window = library:CreateWindow({
                 camera = tabs.visual:AddLeftGroupbox("Camera"),
                 world = tabs.visual:AddRightGroupbox("World"),
                 bloom = tabs.visual:AddRightGroupbox("Bloom"),
-                color = tabs.visual:AddRightGroupbox("Color")
+                color = tabs.visual:AddRightGroupbox("Color"),
                 misc = tabs.visual:AddLeftGroupbox("Miscallaenous")
             },
             render = {
@@ -74,7 +74,7 @@ local window = library:CreateWindow({
         do -- // Visuals
             builder.setUpBloomEffect(sections.visual.bloom)
             builder.setUpColorCorrectionEffect(sections.visual.color)
-            
+
         end 
 
         do -- // Misc 

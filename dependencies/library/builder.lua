@@ -276,7 +276,7 @@ local builder = {}; do
         flag = flag .. "ColorCorrection"
     
         section:AddToggle(flag .. "Enabled", {
-            Text = "Enable Color Correction",
+            Text = "Enabled",
             Default = false
         }):AddColorPicker(flag .. "TintColor", {
             Default = Color3.fromRGB(255, 255, 255),
@@ -301,6 +301,69 @@ local builder = {}; do
             Default = 0
         })
     end
+
+    function builder.setUpCamera(section, flag)
+        flag = flag .. "Camera"
+
+        section:AddToggle(flag .. "Fov", {
+            Text = "Edit FOV"
+        }):AddKeyPicker(flag .. "FovKey", {
+            Text = "Field Of View",
+            Mode = "Always",
+            SyncToggleState = true 
+        })
+
+        section:AddSlider(flag .. "FovSlider", {
+            Max = 120,
+            Text = "Field Of View",
+            Default = 70,
+            Decimals = 1,
+            Visible = false 
+        })
+
+        section:AddToggle(flag .. "ZoomEnabled", {
+            Text = "Edit Zoom Distance"
+        })
+
+        section:AddSlider(flag .. "ZoomMin", {
+            Max = 5000,
+            Text = "Minimum Zoom Distance",
+            Visible = false
+        })
+
+        section:AddSlider(flag .. "ZoomMax", {
+            Max = 5000,
+            Text = "Maximum Zoom Distance",
+            Visible = false
+        })
+
+        section:AddToggle(flag .. "ThirdPerson", {
+            Text = "Third Person"
+        })
+
+        section:AddDropdown(flag .. "ThirdPersonMethod", {
+            Text = "Method",
+            Values = {"Camera", "Hook"},
+            Default = 2
+            Visible = false 
+        })
+
+        section:AddSlider(flag .. "ThirdPersonDistance", {
+            Text = "Distance",
+            Min = 0, Max = 18, Default = 12, Decimals = 2
+        })
+        
+        library.Toggles[flag .. "Fov"]:OnChanged(function(Value)
+            library.Options[flag .. "FovSlider"]:SetVisible(Value)
+        end)
+
+        library.Toggles[flag .. "ZoomEnabled"]:OnChanged(function(Value)
+            library.Options[flag .. "ZoomMin"]:SetVisible(Value)
+            library.Options[flag .. "ZoomMax"]:SetVisible(Value)
+        end)
+
+        
+    end 
 
     function builder.setUpCharacter(section, flag)
         flag = flag or "rageCharacter"
