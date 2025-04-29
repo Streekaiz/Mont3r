@@ -476,6 +476,7 @@ local builder = {}; do
 
                 library.Toggles[flag .. "Bar"]:OnChanged(function(Value)
                     path.healthBar = Value
+                    library.Options[flag .. "BarOutline"]:SetVisible(Value)
                     path.healthyColor = library.Options[flag .. "BarHealthy"].Value
                     path.dyingColor = library.Options[flag .. "BarDying"].Value
                 end)
@@ -487,6 +488,13 @@ local builder = {}; do
                 library.Options[flag .. "BarDying"]:OnChanged(function(Value)
                     path.dyingColor = Value
                 end)
+
+                library.Toggles[flag .. "BarOutline"]:OnChanged(function(Value)
+                    path.healthBarOutline = Value 
+                    path.healthBarOutlineColor = [library.Options[flag .. "BarOutlineColor"].Value, library.Options[flag .. "BarOutlineColor"].Transparency]
+                end)
+
+
                 --[[
                     enabled = false,
                     box = false,
