@@ -99,20 +99,425 @@ local window = library:CreateWindow({
         end 
 
         do -- // Legit
-            builder.setUpAimAssist(sections.legit.aim)
-            builder.setUpFov(sections.legit.aim, "legitAim")
-            builder.setUpSilentAim(sections.legit.silent)
-            builder.setUpFov(sections.legit.silent, "legitSilent")
+            do -- // Aim
+                sections.legit.aim:AddToggle("legitAimEnabled", {
+                    Text = "Enabled"
+                }):AddKeyPicker("legitAimKey", {
+                    Text = "Aim Assist",
+                    Mode = "Hold",
+                    Modes = {"Toggle", "Hold"}
+                })
+        
+                sections.legit.aim:AddDropdown("legitAimTarget", {
+                    Text = "Target Area", 
+                    Values = {"Head", "Torso", "Arms", "Legs"},
+                    Default = {"Head", "Torso"},
+                    Multi = true
+                })
+        
+                sections.legit.aim:AddDropdown("legitAimMethod", {
+                    Text = "Mouse Method",
+                    Values = {"Camera", "Windows API"},
+                    Default = 2
+                })
+        
+                sections.legit.aim:AddToggle("legitAimSmoothing", {
+                    Text = "Use Smoothing"
+                }):OnChanged(function(Value)
+                    library.Options["legitAimSmoothingX"]:SetVisible(Value)
+                    library.Options["legitAimSmoothingY"]:SetVisible(Value)
+                end)
+        
+                for i, v in ipairs({"X", "Y"}) do 
+                    sections.legit.aim:AddSlider("legitAimSmoothing" .. v, {
+                        Text = v .. " Smoothing",
+                        Default = 50,
+                        Suffix = "%", 
+                    })
+                end 
+        
+                sections.legit.aim:AddToggle("legitAimPrediction", {
+                    Text = "Predict Projectile Velocity"
+                }):OnChanged(function(Value)
+                    library.Options["legitAimPredictionType"]:SetVisible(Value)
+                    library.Options["legitAimPredictionCustom"]:SetVisible(Value)
+                end)
+                
+                sections.legit.aim:AddDropdown("legitAimPredictionType", {
+                    Text = "Prediction Type",
+                    Values = {"Static", "Dynamic", "Custom"},
+                    Multi = true,
+                    Visible = false
+                })
+        
+                sections.legit.aim:AddInput("legitAimPredictionCustom", {
+                    Text = "Custom Prediction",
+                    Numeric = true,
+                    Default = "0.165",
+                    Finished = true,
+                    Placeholder = "prediction value",
+                    AllowEmpty = false,
+                    MaxLength = 5,
+                    Visible = false
+                })
+
+                sections.legit.aim:AddToggle("legitAimFovUse", {
+                    Text = "Use FOV",
+                    Default = true
+                })
+        
+                sections.legit.aim:AddToggle("legitAimFovShow", {
+                    Text = "Show FOV Circle"
+                }):AddColorPicker("legitAimFovColor", {
+                    Color = Color3.fromRGB(math.random(0, 255), math.random(0, 255), math.random(0, 255)),
+                    Transparency = 0
+                })
+        
+                sections.legit.aim:AddSlider("legitAimFovRadius", {
+                    Text = "Circle Radius",
+                    Min = 30, Max = 360,
+                    Default = 360 / 2,
+                    Suffix = " pixels"
+                })
+        
+                sections.legit.aim:AddDropdown("legitAimFovPosition", {
+                    Text = "Circle Position",
+                    Values = {"Mouse", "Centered"},
+                    Default = "Mouse"
+                })
+        
+                library.Toggles["legitAimFovShow"]:OnChanged(function(value)
+                    library.Options["legitAimFovPosition"]:SetVisible(value)
+                end)
+            end 
+        
+            do -- // Silent 
+                sections.legit.silent:AddToggle("legitSilentEnabled", {Text = "Enabled"}):AddKeyPicker("legitSilentKey", {SyncToggleState = true, Mode = "Always", Text = "Silent Aim"})
+        
+                sections.legit.silent:AddDropdown("legitSilentTarget", {
+                    Text = "Target Area", 
+                    Values = {"Head", "Torso", "Arms", "Legs"},
+                    Default = {"Head", "Torso"},
+                    Multi = true
+                })
+        
+                sections.legit.silent:AddDropdown("legitSilentMethod", {
+                    Text = "Method",
+                    Values = {"Raycast"},
+                    Default = 1
+                })
+        
+                sections.legit.silent:AddSlider("legitSilentChance", {
+                    Text = "Hit Chance",
+                    Rounding = 2,
+                    Suffix = "%"
+                })
+        
+                sections.legit.silent:AddToggle("legitSilentPrediction", {
+                    Text = "Predict Projectile Velocity"
+                }):OnChanged(function(Value)
+                    library.Options["legitSilentPredictionType"]:SetVisible(Value)
+                    library.Options["legitSilentPredictionCustom"]:SetVisible(Value)
+                end)
+                
+                sections.legit.silent:AddDropdown("legitSilentPredictionType", {
+                    Text = "Prediction Type",
+                    Values = {"Static", "Dynamic", "Custom"},
+                    Multi = true,
+                    Visible = false
+                })
+        
+                sections.legit.silent:AddInput("legitSilentPredictionCustom", {
+                    Text = "Custom Prediction",
+                    Numeric = true,
+                    Default = "0.165",
+                    Finished = true,
+                    Placeholder = "prediction value",
+                    AllowEmpty = false,
+                    MaxLength = 5,
+                    Visible = false
+                })
+
+                sections.legit.silent:AddToggle("legitSilentFovUse", {
+                    Text = "Use FOV",
+                    Default = true
+                })
+        
+                sections.legit.silent:AddToggle("legitSilentFovShow", {
+                    Text = "Show FOV Circle"
+                }):AddColorPicker("legitSilentFovColor", {
+                    Color = Color3.fromRGB(math.random(0, 255), math.random(0, 255), math.random(0, 255)),
+                    Transparency = 0
+                })
+        
+                sections.legit.silent:AddSlider("legitSilentFovRadius", {
+                    Text = "Circle Radius",
+                    Min = 30, Max = 360,
+                    Default = 360 / 2,
+                    Suffix = " pixels"
+                })
+        
+                sections.legit.silent:AddDropdown("legitSilentFovPosition", {
+                    Text = "Circle Position",
+                    Values = {"Mouse", "Centered"},
+                    Default = "Mouse"
+                })
+        
+                library.Toggles["legitSilentFovShow"]:OnChanged(function(value)
+                    library.Options["legitSilentFovPosition"]:SetVisible(value)
+                end)
+            end 
         end
 
         do -- // Rage
-            builder.setUpRagebot(sections.rage.bot, "rageBot")
-            builder.setUpCharacter(sections.rage.char, "rageAnti")
-            builder.setUpLag(sections.rage.lag, "rageLag")
+            do -- // Bot 
+                
+                sections.rage.bot:AddToggle("rageBotEnabled", {
+                    Text = "Enabled",
+                    Risky = true
+                })
+        
+                sections.rage.bot:AddDropdown("rageBotTarget", {
+                    Text = "Target Priority",
+                    Values = {"Head", "Torso", "Arms", "Legs"},
+                    Default = {"Head"}
+                })
+        
+                sections.rage.bot:AddDropdown("rageBotScan", {
+                    Text = "Scanning",
+                    Values = {"None", "Standard", "Advanced"},
+                    Default = 2,
+                    Tooltip = "Problems may arise if set to 'none'"
+                })
+        
+                sections.rage.bot:AddToggle("rageBotForce", {
+                    Text = "Force Hit",
+                    Risky = true
+                })
+        
+                sections.rage.bot:AddToggle("rageBotPrediction", {
+                    Text = "Predict Projectile Velocity"
+                }):OnChanged(function(Value)
+                    library.Options["rageBotPredictionType"]:SetVisible(Value)
+                    library.Options["rageBotPredictionCustom"]:SetVisible(Value)
+                end)
+                
+                sections.rage.bot:AddDropdown("rageBotPredictionType", {
+                    Text = "Prediction Type",
+                    Values = {"Static", "Dynamic", "Custom"},
+                    Multi = true,
+                    Visible = false
+                })
+        
+                sections.rage.bot:AddInput("rageBotPredictionCustom", {
+                    Text = "Custom Prediction",
+                    Numeric = true,
+                    Default = "0.165",
+                    Finished = true,
+                    Placeholder = "prediction value",
+                    AllowEmpty = false,
+                    MaxLength = 5,
+                    Visible = false
+                })
+        
+                sections.rage.bot:AddToggle("rageBotNotification", {
+                    Text = "Hit Notification",
+                    Default = true 
+                })
+        
+                sections.rage.bot:AddDropdown("rageBotIgnorePlayer", {
+                    Text = "Ignore Players",
+                    SpecialType = "Player",
+                    Searchable = true,
+                    ExcludeLocalPlayer = true,
+                    Multi = true
+                })
+        
+                sections.rage.bot:AddDropdown("rageBotIgnoreTeam", {
+                    Text = "Ignore Teams",
+                    SpecialType = "Team",
+                    Multi = true
+                })
+            end
+
+            do -- // Character 
+                sections.rage.char:AddToggle("rageCharEnabled", {
+                    Text = "Enabled"
+                })
+            
+                sections.rage.char:AddDropdown("rageCharYawModifier", {
+                    Text = "Yaw Modifier",
+                    Values = {"Camera", "Spin", "Random"},
+                    Default = "Camera"
+                })
+            
+                sections.rage.char:AddSlider("rageCharYawDegree", {
+                    Text = "Yaw Degree",
+                    Min = -180, Max = 180,
+                    Default = 0
+                })
+            
+                sections.rage.char:AddDropdown("rageCharOffsetYawModifier", {
+                    Text = "Offset Yaw Modifier",
+                    Values = {"None", "Jitter", "Offset Jitter"},
+                    Default = "None"
+                })
+            
+                sections.rage.char:AddSlider("rageCharOffsetYawDegree", {
+                    Text = "Offset Yaw Degree",
+                    Min = -180, Max = 180,
+                    Default = 0
+                })
+            end 
+
+            do -- // Lag 
+                sections.rage.lag:AddToggle("rageLagEnabled", {
+                    Text = "Enabled"
+                })
+            
+                sections.rage.lag:AddDropdown("rageLagMethod", {
+                    Text = "Method",
+                    Values = {"Static", "Random"},
+                    Default = "Static"
+                })
+            
+                sections.rage.lag:AddSlider("rageLagLimit", {
+                    Text = "Limit",
+                    Min = 0, Max = 12,
+                    Default = 8
+                })
+            
+                sections.rage.lag:AddToggle("rageLagFreezePackets", {
+                    Text = "Freeze Packets"
+                }):AddKeyPicker("rageLagFreezePacketsKey", {
+                    Modes = {"Toggle", "Hold"},
+                    Mode = "Toggle"
+                })
+            end 
         end 
 
         do -- // Visuals
-            builder.setUpBloomEffect(sections.visual.bloom, "visual")
+            do -- // Bloom
+                sections.visual.bloomAddToggle("visualBloomEnabled", {
+                    Text = "Enable Bloom Effect",
+                    Default = false
+                })
+            
+                sections.visual.bloomAddSlider("visualBloomIntensity", {
+                    Text = "Intensity",
+                    Min = 0, Max = 10,
+                    Default = 1
+                })
+            
+                sections.visual.bloomAddSlider("visualBloomSize", {
+                    Text = "Size",
+                    Min = 0, Max = 100,
+                    Default = 24
+                })
+            
+                sections.visual.bloomAddSlider("visualBloomThreshold", {
+                    Text = "Threshold",
+                    Min = 0, Max = 1,
+                    Default = 0.3
+                })
+            end 
+
+            do -- // Color 
+                sections.visual.color:AddToggle("visualColorEnabled", {
+                    Text = "Enabled",
+                    Default = false
+                }):AddColorPicker("visualColorTintColor", {
+                    Color = Color3.fromRGB(255, 255, 255),
+                    Transparency = 0
+                })
+            
+                sections.visual.color:AddSlider("visualColorBrightness", {
+                    Text = "Brightness",
+                    Min = -1, Max = 1,
+                    Default = 0
+                })
+            
+                sections.visual.color:AddSlider("visualColorContrast", {
+                    Text = "Contrast",
+                    Min = -1, Max = 1,
+                    Default = 0
+                })
+            
+                sections.visual.color:AddSlider("visualColorSaturation", {
+                    Text = "Saturation",
+                    Min = -1, Max = 1,
+                    Default = 0
+                })
+            end 
+
+            do -- // Camera
+                sections.visual.cameraAddToggle("visualCameraFov", {
+                    Text = "Edit FOV"
+                }):AddKeyPicker("visualCameraFovKey", {
+                    Text = "Field Of View",
+                    Mode = "Always",
+                    SyncToggleState = true 
+                })
+        
+                sections.visual.cameraAddSlider("visualCameraFovSlider", {
+                    Max = 120,
+                    Text = "Field Of View",
+                    Default = 70,
+                    Decimals = 1,
+                    Visible = false 
+                })
+        
+                sections.visual.cameraAddToggle("visualCameraZoomEnabled", {
+                    Text = "Edit Zoom Distance"
+                })
+        
+                sections.visual.cameraAddSlider("visualCameraZoomMin", {
+                    Max = 5000,
+                    Text = "Minimum Zoom Distance",
+                    Visible = false
+                })
+        
+                sections.visual.cameraAddSlider("visualCameraZoomMax", {
+                    Max = 5000,
+                    Text = "Maximum Zoom Distance",
+                    Visible = false
+                })
+        
+                sections.visual.cameraAddToggle("visualCameraThirdPerson", {
+                    Text = "Third Person"
+                })
+        
+                sections.visual.cameraAddDropdown("visualCameraThirdPersonMethod", {
+                    Text = "Method",
+                    Values = {"Camera", "Hook"},
+                    Default = 2,
+                    Visible = false 
+                })
+        
+                sections.visual.cameraAddSlider("visualCameraThirdPersonDistance", {
+                    Text = "Distance",
+                    Min = 0, Max = 18, Default = 12, Decimals = 2
+                })
+                
+                library.Toggles["visualCameraFov"]:OnChanged(function(Value)
+                    library.Options["visualCameraFovSlider"]:SetVisible(Value)
+                end)
+        
+                library.Toggles["visualCameraThirdPerson"]:OnChanged(function(Value)
+                    library.Options["visualCameraThirdPersonMethod"]:SetVisible(Value)
+                    library.Options["visualCameraThirdPersonDistance"]:SetVisible(Value)
+                end)
+        
+                library.Toggles["visualCameraZoomEnabled"]:OnChanged(function(Value)
+                    library.Options["visualCameraZoomMin"]:SetVisible(Value)
+                    library.Options["visualCameraZoomMax"]:SetVisible(Value)
+                end)
+            end 
+
+            do -- // World 
+
+            end 
+
             builder.setUpColorCorrectionEffect(sections.visual.color, "visual")
             builder.setUpCamera(sections.visual.camera, "visual")
             builder.setUpWorld(sections.visual.world, "visual")
