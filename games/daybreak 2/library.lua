@@ -1,8 +1,11 @@
-local library, builder, saveManager, themeManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/Streekaiz/Mont3r/refs/heads/main/dependencies/library/builder.lua", true))()
+local library, builder, saveManager, themeManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/Streekaiz/Mont3r/refs/heads/main/dependencies/library/builder.lua", true))(); do 
+    saveManager:SetLibrary(library)
+    themeManager:SetLibrary(library)
+end 
 
 local window = library:CreateWindow({
     Title = "Mont3r",
-    Footer = "Daybreak 2 - v" .. (isfile("mont3rVer.cfg") and readfile("mont3rVer.cfg")) or "0.0.1",
+    Footer = "Daybreak 2 - v0.0.1",
     CornerRadius = 0,
     MobileButtonsSide = "Right"
 }); do 
@@ -22,6 +25,12 @@ local window = library:CreateWindow({
                 home = tabs.home:AddLeftGroupbox("Changelogs"),
                 discord = tabs.home:AddRightGroupbox("Discord"),
                 client = tabs.home:AddRightGroupbox("Client")
+            },
+            main = {
+                auto = tabs.main:AddLeftGroupbox("Automation"),
+                killerControl = tabs.main:AddRightGroupbox("Control Killer"),
+                autoFarm = tabs.main:AddLeftGroupbox("Auto Farm"),
+                exploits = tabs.main:AddRightGroupbox("Exploits")
             },
             legit = {
                 aim = tabs.legit:AddLeftGroupbox("Aim Assist"),
@@ -52,11 +61,41 @@ local window = library:CreateWindow({
                 servers = tabs.misc:AddRightGroupbox("Servers")
             },
             settings = {
-                main = tabs.settings:AddRightGroupbox("UI Settings"),
-                config = saveManager:BuildConfigSection(tabs.settings),
-                theme = themeManager:ApplyToTab(tabs.settings)
+                main = tabs.settings:AddRightGroupbox("UI Settings")
             }
         }
+
+        do -- // Main
+            sections.main.auto:AddToggle("skillChecksAuto", {
+                Text = "Complete Skillchecks",
+                Tooltip = "Manages skill checks for you."
+            })
+
+            sections.main.auto:AddDropdown("skillChecksMethod", {
+                Text = "Completion Method",
+                Values = {"ChildAdded", "Hookmetamethod"},
+                Visible = false,
+                Tooltip = "ChildAdded is reccomended."
+            })
+
+            sections.main.auto:AddSlider("skillChecksDelay", {
+                Text = "Delay",
+                Min = 0, Max = 10, Decimals = 2, Suffix = "s",
+                Visible = false, Disabled = true,
+                DisabledTooltip = "Only enabled for ChildAdded!"
+            })
+            
+
+            library.Toggles.skillChecksAuto:OnChanged(function(Value)
+                library.Options.skillChecksMethod:SetVisible(Value)
+                library.Options.skillChecksDelay:SetVisible(Value)
+            end)
+
+            library.Options.skillChecksMethod:OnChanged(function(Value)
+                library.Options.skillChecksDelay:SetVisible(Value == "ChildAdded")
+            end)
+
+        end 
 
         do -- // Legit
             builder.setUpAimAssist(sections.legit.aim)
@@ -72,17 +111,19 @@ local window = library:CreateWindow({
         end 
 
         do -- // Visuals
-            builder.setUpBloomEffect(sections.visual.bloom)
-            builder.setUpColorCorrectionEffect(sections.visual.color)
-
+            builder.setUpBloomEffect(sections.visual.bloom, "visual")
+            builder.setUpColorCorrectionEffect(sections.visual.color, "visual")
+            builder.setUpCamera(sections.visual.camera, "visual")
+            builder.setUpWorld(sections.visual.world, "visual")
         end 
 
         do -- // Misc 
-
+            builder.setUpPlayer(sections.misc.localPlayer, "misc")
         end 
 
         do -- // Settings 
-
+            saveManager:BuildConfigSection(tabs.settings)
+            themeManager:ApplyToTab(tabs.settings)
         end 
     end
 end 

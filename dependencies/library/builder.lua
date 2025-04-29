@@ -357,12 +357,51 @@ local builder = {}; do
             library.Options[flag .. "FovSlider"]:SetVisible(Value)
         end)
 
+        library.Toggles[flag .. "ThirdPerson"]:OnChanged(function(Value)
+            library.Options[flag .. "ThirdPersonMethod"]:SetVisible(Value)
+            library.Options[flag .. "ThirdPersonDistance"]:SetVisible(Value)
+        end)
+
         library.Toggles[flag .. "ZoomEnabled"]:OnChanged(function(Value)
             library.Options[flag .. "ZoomMin"]:SetVisible(Value)
             library.Options[flag .. "ZoomMax"]:SetVisible(Value)
         end)
+    end 
 
-        
+    function builder.setUpWorld(section, flag)
+        flag = flag .. "World"
+        section:AddToggle(flag .. "Ambience", {
+            Text = "Ambience"
+        }):AddColorPicker(flag .. "AmbienceColor1", {
+            Text = "Indoor Ambience",
+            Color = Color3.fromRGB(100, 100, 255)
+        }):AddColorPicker(flag .. "AmbienceColor2", {
+            Text = "Outdoor Ambience",
+            Color = Color3.fromRGB(0, 0, 100)
+        })
+
+        section:AddToggle(flag .. "Shadows", {
+            Text = "Global Shadows",
+            Default = game:GetService("Lighting").GlobalShadows 
+        })
+
+        section:AddToggle(flag .. "Fog", {
+            Text = "Disable Fog"
+        })
+
+        section:AddDropdown(flag .. "Technology", {
+            Text = "Lighting Technology",
+            Values = {"Compatability", "Voxel", "ShadowMap", "Future"},
+            Default = string.gsub(game:GetService("Lighting").Technology, "Enum.Technology.", ""),
+            Disabled = sethiddenproperty == nil,
+            DisabledTooltip = "Your executor doesn't support sethiddenproperty!",
+            Tooltip = "May decrease/increase performance depending on the chosen value"
+        })
+
+        if sethiddenproperty then 
+            library.Options[flag .. "Technology"]:OnChanged(function(Value)
+            end)
+        end 
     end 
 
     function builder.setUpCharacter(section, flag)
@@ -423,6 +462,58 @@ local builder = {}; do
             Mode = "Toggle"
         })
     end
+
+    function builder.setUpPlayer(section, flag)
+        flag = flag .. "localPlayer"
+
+        section:AddDropdown(flag .. "Modifications", {
+            Text = "Modifications",
+            Values = {"Speed", "Jump Power", "Flight"},
+            Multi = true
+        })
+
+        section:AddDropdown(flag .. "SpeedMethod", {
+            Text = "Speed Method",
+            Values = {"CFrame", "Humanoid"},
+            Visible = false 
+        })
+
+        section:AddInput(flag .. "SpeedValue", {
+            Text = "Speed Value",
+            Numeric = true,
+            Placeholder = "0.165",
+            Default = "0.165",
+            Visible = false
+        })
+
+        section:AddInput(flag .. "JumpValue", {
+            Text = "Jump Power Value",
+            Numeric = true,
+            Placeholder = "0.165",
+            Default = "0.165",
+            Visible = false
+        })
+
+        section:AddDropdown(flag .. "FlyMethod", {
+            Text = "Flight Method",
+            Values = {"CFrame", "Velocity"},
+            Visible = false
+        })
+
+        section:AddSlider(flag .. "FlySpeed", {
+            Text = "Flight Speed",
+            Min = 1, Max = 35, Default = 17.5, Decimals = 2, 
+            Visible = false 
+        })
+
+        library.Options[flag .. "Modifications"]:OnChanged(function()
+            library.Options[flag .. "SpeedMethod"]:SetVisible(library.Options[flag .. "Modifications"].Speed)
+            library.Options[flag .. "SpeedValue"]:SetVisible(library.Options[flag .. "Modifications"].Speed)
+            library.Options[flag .. "JumpValue"]:SetVisible(library.Options[flag .. "Modifications"]["Jump Power"])
+            library.Options[flag .. "FlyMethod"]:SetVisible(library.Options[flag .. "Modifications"].Flight)
+            library.Options[flag .. "FlySpeed"]:SetVisible(library.Options[flag .. "Modifications"].Flight)
+        end)
+    end 
 end 
 
 return library, builder, saveManager, themeManager 
