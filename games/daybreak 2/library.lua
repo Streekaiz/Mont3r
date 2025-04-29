@@ -3,13 +3,15 @@ local library, builder, saveManager, themeManager = loadstring(game:HttpGet("htt
     themeManager:SetLibrary(library)
 end 
 
+local render = loadstring(game:HttpGet("https://raw.githubusercontent.com/Streekaiz/Mont3r/refs/heads/main/dependencies/render.lua", true))()
+
 local window = library:CreateWindow({
     Title = "Mont3r",
     Footer = "Daybreak 2 - v0.0.1",
     CornerRadius = 0,
     MobileButtonsSide = "Right"
 }); do 
-    local tabs = builder.setUpTabs({
+    local tabs = builder.setUpTabs(window, {
         {"home", "Home", "house"},
         {"main", "Main", "user-round-cog"},
         {"legit", "Legit", "locate"},
@@ -116,6 +118,10 @@ local window = library:CreateWindow({
             builder.setUpCamera(sections.visual.camera, "visual")
             builder.setUpWorld(sections.visual.world, "visual")
         end 
+
+        do --- // Render
+            builder.setUpRender(tabs.render, render)
+        end
 
         do -- // Misc 
             builder.setUpPlayer(sections.misc.localPlayer, "misc")

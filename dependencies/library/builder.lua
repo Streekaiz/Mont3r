@@ -1,15 +1,14 @@
-print('1')
+
 local function load(url)
     return loadstring(game:HttpGet(url, true))()
 end 
-print('2')
+
 local repository = "https://raw.githubusercontent.com/deividcomsono/Obsidian/main/"
-print('3')
+
 local library = load(repository .. "Library.lua")
 local saveManager = load(repository .. "addons/SaveManager.lua")
 local themeManager = load(repository .. "addons/ThemeManager.lua")
 
-print("huh")
 local builder = {}; do 
     function builder.setUpTabs(window, tbl)
         local tabs = {}; tbl = tbl or {
