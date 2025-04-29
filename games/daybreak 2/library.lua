@@ -1,9 +1,9 @@
-local library, builder, saveManager, themeManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/Streekaiz/Mont3r/refs/heads/main/dependencies/library/builder.lua", true))(); do 
+local library, builder, saveManager, themeManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/Streekaiz/Mont3r/main/dependencies/library/builder.lua")(); do 
     saveManager:SetLibrary(library)
     themeManager:SetLibrary(library)
 end 
 
-local render = loadstring(game:HttpGet("https://raw.githubusercontent.com/Streekaiz/Mont3r/refs/heads/main/dependencies/render.lua", true))()
+local render = loadstring(game:HttpGet("https://raw.githubusercontent.com/Streekaiz/Mont3r/main/dependencies/render.lua"))()
 
 local window = library:CreateWindow({
     Title = "Mont3r",
@@ -83,8 +83,7 @@ local window = library:CreateWindow({
             sections.main.auto:AddSlider("skillChecksDelay", {
                 Text = "Delay",
                 Min = 0, Max = 10, Decimals = 2, Suffix = "s",
-                Visible = false, Disabled = true,
-                DisabledTooltip = "Only enabled for ChildAdded!"
+                Visible = false
             })
             
 
