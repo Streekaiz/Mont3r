@@ -1,12 +1,15 @@
+print('1')
 local function load(url)
     return loadstring(game:HttpGet(url, true))()
 end 
-
+print('2')
 local repository = "https://raw.githubusercontent.com/deividcomsono/Obsidian/main/"
-
+print('3')
 local library = load(repository .. "Library.lua")
-local saveManager, themeManager = load(repository .. "addons/SaveManager.lua"), load(repository .. "addons/ThemeManager.lua")
+local saveManager = load(repository .. "addons/SaveManager.lua")
+local themeManager = load(repository .. "addons/ThemeManager.lua")
 
+print("huh")
 local builder = {}; do 
     function builder.setUpTabs(window, tbl)
         local tabs = {}; tbl = tbl or {
@@ -172,8 +175,7 @@ local builder = {}; do
             MaxLength = 5,
             Visible = false
         })
-    end 
-
+    end
     function builder.setUpRagebot(section, flag)
         flag = flag or "rageBot"
 
@@ -344,7 +346,7 @@ local builder = {}; do
         section:AddDropdown(flag .. "ThirdPersonMethod", {
             Text = "Method",
             Values = {"Camera", "Hook"},
-            Default = 2
+            Default = 2,
             Visible = false 
         })
 
@@ -366,7 +368,7 @@ local builder = {}; do
             library.Options[flag .. "ZoomMin"]:SetVisible(Value)
             library.Options[flag .. "ZoomMax"]:SetVisible(Value)
         end)
-    end 
+    end
 
     function builder.setUpWorld(section, flag)
         flag = flag .. "World"
@@ -401,8 +403,8 @@ local builder = {}; do
         if sethiddenproperty then 
             library.Options[flag .. "Technology"]:OnChanged(function(Value)
             end)
-        end 
-    end 
+        end
+    end
 
     function builder.setUpCharacter(section, flag)
         flag = flag or "rageCharacter"
@@ -513,7 +515,9 @@ local builder = {}; do
             library.Options[flag .. "FlyMethod"]:SetVisible(library.Options[flag .. "Modifications"].Flight)
             library.Options[flag .. "FlySpeed"]:SetVisible(library.Options[flag .. "Modifications"].Flight)
         end)
-    end 
-end 
+    end
+    
+end warn(tostring(math.random(0, 999)))
 
+print("yurr")
 return library, builder, saveManager, themeManager 
