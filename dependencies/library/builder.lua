@@ -464,8 +464,30 @@ local builder = {}; do
                 library.Options[flag .. "BoxOutlineColor"]:OnChanged(function(Value)
                     path.boxOutlineColor = {library.Options[flag .. "BoxOutlineColor"].Value, library.Options[flag .. "BoxOutlineColor"].Transparency}
                 end)
+
+                library.Toggles[flag .. "BoxFill"]:OnChanged(function(Value)
+                    path.boxFill = Value
+                    path.boxFillColor = {library.Options[flag .. "BoxFillColor"].Value, library.Options[flag .. "BoxFillColor"].Transparency}
+                end)
+    
+                library.Options[flag .. "BoxFillColor"]:OnChanged(function(Value)
+                    path.boxFillColor = {library.Options[flag .. "BoxFillColor"].Value, library.Options[flag .. "BoxFillColor"].Transparency}
+                end)
+
+                library.Toggles[flag .. "Bar"]:OnChanged(function(Value)
+                    path.healthBar = Value
+                    path.healthyColor = library.Options[flag .. "BarHealthy"].Value
+                    path.dyingColor = library.Options[flag .. "BarDying"].Value
+                end)
+    
+                library.Options[flag .. "BarHealthy"]:OnChanged(function(Value)
+                    path.healthyColor = Value
+                end)
+    
+                library.Options[flag .. "BarDying"]:OnChanged(function(Value)
+                    path.dyingColor = Value
+                end)
                 --[[
-                    enemy = {
                     enabled = false,
                     box = false,
                     boxColor = { Color3.new(1,0,0), 1 },
