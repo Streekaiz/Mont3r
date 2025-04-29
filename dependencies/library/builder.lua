@@ -41,7 +41,7 @@ local builder = {}; do
         section:AddToggle(flag .. "Show", {
             Text = "Show FOV Circle"
         }):AddColorPicker(flag .. "Color", {
-            Default = Color3.fromRGB(math.random(0, 255), math.random(0, 255), math.random(0, 255)),
+            Color = Color3.fromRGB(math.random(0, 255), math.random(0, 255), math.random(0, 255)),
             Transparency = 0
         })
 
@@ -281,7 +281,7 @@ local builder = {}; do
             Text = "Enabled",
             Default = false
         }):AddColorPicker(flag .. "TintColor", {
-            Default = Color3.fromRGB(255, 255, 255),
+            Color = Color3.fromRGB(255, 255, 255),
             Transparency = 0
         })
     
@@ -394,8 +394,8 @@ local builder = {}; do
         section:AddDropdown(flag .. "Technology", {
             Text = "Lighting Technology",
             Values = {"Compatability", "Voxel", "ShadowMap", "Future"},
-            Default = string.gsub(game:GetService("Lighting").Technology, "Enum.Technology.", ""),
-            Disabled = sethiddenproperty == nil,
+            Default = string.gsub(tostring(game:GetService("Lighting").Technology), "Enum.Technology.", ""),
+            Disabled = (sethiddenproperty == nil),
             DisabledTooltip = "Your executor doesn't support sethiddenproperty!",
             Tooltip = "May decrease/increase performance depending on the chosen value"
         })
@@ -405,6 +405,116 @@ local builder = {}; do
             end)
         end
     end
+
+    function builder.setUpRender(tab, path)
+        local enemy, friendly = path.teamSettings.enemy, path.teamSettings.friendly 
+        local tabbox = tab:AddLeftTabbox(); do 
+            local enemySection, friendlySection = tabbox:AddTab("Enemy"), tabbox:AddTab("Friendly")
+
+            for i = 1, 2 do 
+                local section = i == 1 and enemySection or friendlySection
+                local path = i == 1 and enemy or friendly 
+                local flag = i == 1 and "espEnemy" or "espFriendly"
+                local white, black = Color3.fromRGB(255, 255, 255), Color3.fromRGB(0, 0, 0)
+                local maincolor = i == 1 and Color3.fromRGB(255, 100, 100) or Color3.fromRGB(100, 100, 255)
+                section:AddToggle(flag .. "Enabled", { Text = "Enabled" }):AddKeyPicker(flag .. "Key", {NoUI = true, Mode = "Always"})
+                section:AddToggle(flag .. "Box", { Text = "Bounded Box" }):AddColorPicker(flag .. "BoxColor", {Color = white, Transparency = 0})
+                section:AddToggle(flag .. "BoxOutline", { Text = "Bounded Box Outline", Visible = false }):AddColorPicker(flag .. "BoxOutlineColor", {Color = black, Transparency = 0})
+                section:AddToggle(flag .. "BoxFill", { Text = "Fill Bounded Box" }):AddColorPicker(flag .. "BoxFillColor", {Color = white, Transparency = 0.5})
+                section:AddToggle(flag .. "BoxDimensional", { Text = "3D Box" }):AddColorPicker(flag .. "BoxDimensionalColor", {Color = white, Transparency = 0})
+                section:AddToggle(flag .. "Bar", { Text = "Health Bar" }):AddColorPicker(flag .. "BarHealthy", {Color = Color3.fromRGB(100, 255, 100)}):AddColorPicker(flag .. "BarDying", {Color = Color3.fromRGB(255, 100, 100)})
+                section:AddToggle(flag .. "BarOutline", { Text = "Health Bar Outline", Visible = false }):AddColorPicker(flag .. "BarOutlineColor", {Color = black, Transparency = 0})
+                section:AddToggle(flag .. "Health", { Text = "Health Text" }):AddColorPicker(flag .. "HealthColor", {Color = Color3.fromRGB(100, 255, 100), Transparency = 0})
+                section:AddToggle(flag .. "HealthOutline", { Text = "Health Text Outline", Visible = false }):AddColorPicker(flag .. "HealthOutlineColor", {Color = black})
+                section:AddToggle(flag .. "Name", { Text = "Name" }):AddColorPicker(flag .. "NameColor", {Color = white, Transparency = 0})
+                section:AddToggle(flag .. "NameOutline", { Text = "Name Outline", Visible = false }):AddColorPicker(flag .. "NameOutlineColor", {Color = black})
+                section:AddToggle(flag .. "Distance", { Text = "Distance" }):AddColorPicker(flag .. "DistanceColor", {Color = white, Transparency = 0})
+                section:AddToggle(flag .. "DistanceOutline", { Text = "Distance Outline", Visible = false }):AddColorPicker(flag .. "DistanceOutlineColor", {Color = black})
+                section:AddToggle(flag .. "Weapon", { Text = "Weapon" }):AddColorPicker(flag .. "WeaponColor", {Color = white, Transparency = 0})
+                section:AddToggle(flag .. "WeaponOutline", { Text = "Weapon Outline", Visible = false }):AddColorPicker(flag .. "WeaponOutlineColor", {Color = black})
+                section:AddToggle(flag .. "Tracer", { Text = "Tracer" }):AddColorPicker(flag .. "TracerColor", {Color = white, Transparency = 0})
+                section:AddToggle(flag .. "TracerOutline", { Text = "Tracer Outline", Visible = false }):AddColorPicker(flag .. "TracerOutlineColor", {Color = black, Transparency = 0})
+                section:AddDropdown(flag .. "TracerOrigin", { Text = "Tracer Origin", Visible = false, Values = {"Top", "Bottom", "Middle"}, Default = "Bottom"})
+                section:AddToggle(flag .. "Arrow", { Text = "Offscreen Arrow" }):AddColorPicker(flag .. "ArrowColor", {Color = white, Transparency = 0})
+                section:AddToggle(flag .. "ArrowOutline", { Text = "Offscreen Arrow Outline", Visible = false }):AddColorPicker(flag .. "ArrowOutlineColor", {Color = black, Transparency = 0})
+                section:AddSlider(flag .. "ArrowRadius", { Text = "Offscreen Arrow Radius", Visible = false, Min = 0, Max = 300, Default = 150, Decimals = 1})
+                section:AddSlider(flag .. "ArrowSize", { Text = "Offscreen Arrow Size", Visible = false, Min = 0, Max = 30, Default = 15, Decimals = 1})
+                section:AddToggle(flag .. "Cham", { Text = "Cham" }):AddColorPicker(flag .. "ChamColor", {Color = maincolor, Transparency = 0.5})
+                section:AddToggle(flag .. "ChamOutline", { Text = "Cham Outline", Visible = false }):AddColorPicker(flag .. "ChamOutlineColor", {Color = black, Transparency = 0})
+                section:AddToggle(flag .. "ChamVisible", { Text = "Visible Only", Visible = false })
+                
+                library.Toggles[flag .. "Enabled"]:OnChanged(function(Value) path.enabled = Value end)
+                library.Toggles[flag .. "Box"]:OnChanged(function(Value)
+                    path.box = Value
+                    path.boxColor = {library.Options[flag .. "BoxColor"].Value, library.Options[flag .. "BoxColor"].Transparency}
+                    path.boxOutline = library.Toggles[flag .. "BoxOutline"].Value 
+                    path.boxOutlineColor = {library.Options[flag .. "BoxOutlineColor"].Value, library.Options[flag .. "BoxOutlineColor"].Transparency}
+                    library.Toggles[flag .. "BoxOutline"]:SetVisible(Value) 
+                end)
+
+                library.Options[flag .. "BoxColor"]:OnChanged(function(Value)
+                    path.boxColor = {library.Options[flag .. "BoxColor"].Value, library.Options[flag .. "BoxColor"].Transparency}
+                end)
+
+                library.Toggles[flag .. "BoxOutline"]:OnChanged(function(Value)
+                    path.boxOutline = Value
+                    path.boxOutlineColor = {library.Options[flag .. "BoxOutlineColor"].Value, library.Options[flag .. "BoxOutlineColor"].Transparency} 
+                end)
+
+                library.Options[flag .. "BoxOutlineColor"]:OnChanged(function(Value)
+                    path.boxOutlineColor = {library.Options[flag .. "BoxOutlineColor"].Value, library.Options[flag .. "BoxOutlineColor"].Transparency}
+                end)
+                --[[
+                    enemy = {
+                    enabled = false,
+                    box = false,
+                    boxColor = { Color3.new(1,0,0), 1 },
+                    boxOutline = true,
+                    boxOutlineColor = { Color3.new(), 1 },
+                    boxFill = false,
+                    boxFillColor = { Color3.new(1,0,0), 0.5 },
+                    healthBar = false,
+                    healthyColor = Color3.new(0,1,0),
+                    dyingColor = Color3.new(1,0,0),
+                    healthBarOutline = true,
+                    healthBarOutlineColor = { Color3.new(), 0.5 },
+                    healthText = false,
+                    healthTextColor = { Color3.new(1,1,1), 1 },
+                    healthTextOutline = true,
+                    healthTextOutlineColor = Color3.new(),
+                    box3d = false,
+                    box3dColor = { Color3.new(1,0,0), 1 },
+                    name = false,
+                    nameColor = { Color3.new(1,1,1), 1 },
+                    nameOutline = true,
+                    nameOutlineColor = Color3.new(),
+                    weapon = false,
+                    weaponColor = { Color3.new(1,1,1), 1 },
+                    weaponOutline = true,
+                    weaponOutlineColor = Color3.new(),
+                    distance = false,
+                    distanceColor = { Color3.new(1,1,1), 1 },
+                    distanceOutline = true,
+                    distanceOutlineColor = Color3.new(),
+                    tracer = false,
+                    tracerOrigin = "Bottom",
+                    tracerColor = { Color3.new(1,0,0), 1 },
+                    tracerOutline = true,
+                    tracerOutlineColor = { Color3.new(), 1 },
+                    offScreenArrow = false,
+                    offScreenArrowColor = { Color3.new(1,1,1), 1 },
+                    offScreenArrowSize = 15,
+                    offScreenArrowRadius = 150,
+                    offScreenArrowOutline = true,
+                    offScreenArrowOutlineColor = { Color3.new(), 1 },
+                    chams = false,
+                    chamsVisibleOnly = false,
+                    chamsFillColor = { Color3.new(0.2, 0.2, 0.2), 0.5 },
+                    chamsOutlineColor = { Color3.new(1,0,0), 0 },
+                ]]
+            end 
+        end 
+    end 
 
     function builder.setUpCharacter(section, flag)
         flag = flag or "rageCharacter"
@@ -517,7 +627,5 @@ local builder = {}; do
         end)
     end
     
-end warn(tostring(math.random(0, 999)))
-
-print("yurr")
+end 
 return library, builder, saveManager, themeManager 
