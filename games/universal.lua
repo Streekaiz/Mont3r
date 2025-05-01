@@ -92,11 +92,7 @@ end; do
 
             section:AddToggle(flag .. "Smoothing", {
                 Text = "Use Smoothing"
-            }):OnChanged(function(Value)
-                library.Options[flag .. "SmoothingX"]:SetVisible(Value)
-                library.Options[flag .. "SmoothingY"]:SetVisible(Value)
-            end)
-
+            })
             for i, v in ipairs({"X", "Y"}) do 
                 section:AddSlider(flag .. "Smoothing" .. v, {
                     Text = v .. " Smoothing",
@@ -107,16 +103,13 @@ end; do
 
             section:AddToggle(flag .. "Prediction", {
                 Text = "Predict Projectile Velocity"
-            }):OnChanged(function(Value)
-                library.Options[flag .. "PredictionType"]:SetVisible(Value)
-                library.Options[flag .. "PredictionCustom"]:SetVisible(Value)
-            end)
+            })
             
             section:AddDropdown(flag .. "PredictionType", {
                 Text = "Prediction Type",
                 Values = {"Static", "Dynamic", "Custom"},
                 Multi = true,
-                Visible = false
+                
             })
 
             section:AddInput(flag .. "PredictionCustom", {
@@ -127,7 +120,7 @@ end; do
                 Placeholder = "prediction value",
                 AllowEmpty = false,
                 MaxLength = 5,
-                Visible = false
+                
             })
         end 
 
@@ -157,16 +150,13 @@ end; do
 
             section:AddToggle(flag .. "Prediction", {
                 Text = "Predict Projectile Velocity"
-            }):OnChanged(function(Value)
-                library.Options[flag .. "PredictionType"]:SetVisible(Value)
-                library.Options[flag .. "PredictionCustom"]:SetVisible(Value)
-            end)
+            })
             
             section:AddDropdown(flag .. "PredictionType", {
                 Text = "Prediction Type",
                 Values = {"Static", "Dynamic", "Custom"},
                 Multi = true,
-                Visible = false
+                
             })
 
             section:AddInput(flag .. "PredictionCustom", {
@@ -177,9 +167,114 @@ end; do
                 Placeholder = "prediction value",
                 AllowEmpty = false,
                 MaxLength = 5,
-                Visible = false
+                
+            })
+        end 
+
+        do -- // Legit Settings
+            local section = groupBoxes.legit.settings 
+            local flag = "legit"
+
+            section:AddDropdown(flag .. "ExcludePlayer", {
+                Text = "Exclude Players",
+                SpecialType = "Player",
+                ExcludeLocalPlayer = true 
+            })
+
+            section:AddDropdown(flag .. 'ExcludeTeam', {
+                Text = 'Exclude Team',
+                SpecialType = "Team"
+            })
+
+            section:AddToggle(flag .. 'ExcludeDistance', {
+                Text = 'Limit by Distance'
+            })
+
+            section:AddSlider(flag .. 'ExcludeDistanceMin', {
+                Text = "Minimum Distance",
+                Max = 5000, Default = 0, HideMax = true, Suffix = " studs"
+            })
+
+            section:AddSlider(flag .. 'ExcludeDistanceMax', {
+                Text = "Maximum Distance",
+                Max = 5000, Default = 2500, HideMax = true, Suffix = " studs"
+            })
+
+            section:AddToggle(flag .. 'ExcludeHealth', {
+                Text = 'Limit by Health'
+            })
+
+            section:AddSlider(flag .. 'ExcludeHealthMin', {
+                Text = "Minimum Health",
+                Max = 5000, Default = 0, HideMax = true, Suffix = " studs"
+            })
+
+            section:AddSlider(flag .. 'ExcludeHealthMax', {
+                Text = "Maximum Health",
+                Max = 5000, Default = 2500, HideMax = true, Suffix = " studs"
+            })
+        end
+
+        do -- // Rage Bot
+            local section = groupBoxes.rage.bot 
+            local flag = 'rageBot'
+
+            section:AddToggle(flag .. 'Enabled', {
+                Text = 'Enabled',
+                Risky = true 
+            })
+
+            section:AddDropdown(flag .. "Hook", {
+                Text = "Hooking Method",
+                Risky = true,
+                Values = {"Raycast", "Mouse", "Remote"},
+                Tooltip = "Might cause some issues ingame"
+            })
+
+            section:AddDropdown(flag .. "Target", {
+                Text = 'Target Priority',
+                Values = {"Head", "Torso", "Arms", "Legs"},
+                Multi = true,
+                Default = {"Head", "Torso"}
+            })
+
+            section:AddDropdown(flag .. "Origin", {
+                Text = "Projectile Origin",
+                Values = {"Character", "Camera"},
+                Default = 1
+            })
+
+            section:AddDropdown(flag .. "Checks", {
+                Text = "Validation Checks",
+                Values = {"Status", "Team", "Visible", "Health", "Distance", "ForceField"},
+                Default = {"Status", "Team", "Visible", "ForceField"},
+                Multi = true 
+            })
+
+            section:AddDropdown(flag .. "Scan", {
+                Text = "Scanning Type",
+                Values = {"Performance", "Standard", "Advanced"},
+                Default = 2
+            })
+
+            section:AddToggle(flag .. 'Path', {
+                Text = 'Redirect Movement',
+                Risky = true
+            })
+
+            section:AddToggle(flag .. "PathIgnoreT", {
+                Text = "Ignore Transparent Objects"
+            })
+
+            section:AddToggle(flag .. "PathIgnoreC", {
+                Text = "Ignore CanCollide Objects"
+            })
+
+            section:AddDropdon(flag .. "PathPerformance", {
+                Text = "Connection Type",
+                Values = {"Loop", "Heartbeat", "RenderStepped", "Stepped"},
+                Default = 2 
             })
         end 
     end 
-
 end 
