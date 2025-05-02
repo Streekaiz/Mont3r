@@ -215,7 +215,7 @@ end; do
             })
         end
 
-        do -- // Rage Bot
+        --[[do -- // Rage Bot
             local section = groupBoxes.rage.bot 
             local flag = 'rageBot'
 
@@ -270,11 +270,169 @@ end; do
                 Text = "Ignore CanCollide Objects"
             })
 
-            section:AddDropdon(flag .. "PathPerformance", {
+            section:AddDropdown(flag .. "PathPerformance", {
                 Text = "Connection Type",
                 Values = {"Loop", "Heartbeat", "RenderStepped", "Stepped"},
                 Default = 2 
             })
+        end]]
+
+        do 
+            local section1, section2, section3, section4 = groupBoxes.visual.bloom, groupBoxes.visual.color, groupBoxes.visual.camera, groupBoxes.visual.world 
+            local flag = "visual"
+
+            do -- // Bloom
+                section1:AddToggle(flag .. "BloomEnabled", {
+                    Text = "Enabled"
+                })
+
+                for i, v in ipairs({
+                    "Intensity", "Threshold", "Size"
+                }) do 
+                    section1:AddSlider(flag .. "Bloom" .. v, {
+                        Text = v,
+                        Min = -10, Max = 10, Default = 0, HideMax = true
+                    })
+                end 
+            end
+
+            do -- // Color
+                section2:AddToggle(flag .. "ColorEnabled", {
+                    Text = "Enabled"
+                }):AddColorPicker(flag .. "TintColor", {
+                    Color = Color3.fromRGB(255, 255, 255),
+                    Transparency = 0
+                })
+
+                for i, v in ipairs({
+                    "Brightness", "Contrast", "Saturation"
+                }) do 
+                    section2:AddSlider(flag .. "Color" .. v, {
+                        Text = v,
+                        Min = -10, Max = 10, Default = 0, HideMax = true
+                    })
+                end 
+            end
+
+            do -- // Camera
+                section3:AddToggle(flag .. "FovEnabled", {
+                    Text = "Edit FOV"
+                }):AddKeyPicker(flag .. "FovKey", {
+                    Text = "Field Of View",
+                    SyncToggleState = true 
+                })
+
+                section3:AddSlider(flag .. "Fov", {
+                    Text = "Field Of View",
+                    Min = 0, Max = 120, Decimals = 1, Default = 70, Suffix = "%", HideMax = true 
+                })
+
+                section3:AddToggle(flag .. "ZoomEnabled", {
+                    Text = "Edit Zoom Distance"
+                })
+
+                for i, v in ipairs({
+                    {"Min", "Minimum"},
+                    {"Max", "Maximum"}
+                }) do 
+                    section3:AddSlider(flag .. "Zoom" .. v[1], {
+                        Text = v[2] .. " Zoom Distance",
+                        Min = 0,
+                        Max = 5000,
+                        Default = i == 1 and 0 or 2500,
+                        HideMax = true 
+                    })
+                end 
+
+                section3:AddToggle(flag .. "ThirdPersonEnabled", {
+                    Text = "Third Person"
+                })
+
+                section3:AddSlider(flag .. "ThirdPersonDistance", {
+                    Text = "Third Person Distance",
+                    Min = 0,
+                    Max = 18,
+                    Default = 13,
+                    HideMax = true 
+                })
+
+            end 
+
+            do -- // World
+                section4:AddToggle(flag .. "Ambient", {
+                    Text = "Ambience"
+                }):AddColorPicker(flag .. "AmbientC1", {
+                    Color = Color3.fromRGB(100, 100, 255)
+                }):AddColorPicker(flag .. "AmbientC2", {
+                    Color = Color3.fromRGB(255, 100, 100)
+                })
+
+                section4:AddToggle(flag .. "Shadow", {
+                    Text = "Global Shadows",
+                    Default = game:GetService("Lighting").GlobalShadows
+                })
+
+                section4:AddDropdown(flag .. "Technology", {
+                    Text = "Lighting Technology",
+                    Values = {"Compatability", "Voxel", "ShadowMap", "Future"},
+                    Default = string.gsub(tostring(game:GetService("Lighting").Technology), "Enum.Technology.", ""),
+                    Disabled = (sethiddenproperty == nil),
+                    DisabledTooltip = "Your executor doesn't support sethiddenproperty!",
+                    Tooltip = "May decrease/increase performance depending on the chosen value"
+                })        
+            end 
+        end 
+
+        do -- // LocalPlayer
+            local section = groupBoxes.misc.localPlayer 
+            local flag = "miscLocalPlayer"
+
+            section:AddDropdown(flag .. "Edits", {
+                Text = "Player Modifications",
+                Values = {"Speed", "Jump", "Flight", "Hip Height"},
+                Multi = true
+            })
+
+            section:AddDropdown(flag .. "SpeedMethod", {
+                Text = "Speed Method",
+                Values = {"CFrame", "Humanoid"},
+                Default = 1
+            })
+
+            section:AddSlider(flag .. "Speed", {
+                Text = "Speed",
+                Min = 0, Max = 100, Default = 18, HideMax = true, Suffix = "%"
+            })
+
+            section:AddSlider(flag .. "Jump", {
+                Text = "Jump Power",
+                Min = 0, Max = 100, Default = 50, HideMax = true, Suffix = "%"
+            })
+
+            section:AddDropdown(flag .. "FlightMethod", {
+                Text = "Flight Method",
+                Values = {"CFrame", "Velocity"},
+                Default = 2
+            })
+
+            section:AddSlider(flag .. "FlightSpeed", {
+                Text = "Flight Speed",
+                Min = 0, Max = 100, Default = 25, HideMax = true, Suffix = "%"
+            })
+        end 
+
+        do -- // Players
+            local section = groupBoxes.misc.players 
+            local flag = "miscPlayers"
+
+            section:AddDropdown(flag .. "Selected", {
+                Text = "Target",
+                SpecialType = "Player",
+                ExcludeLocalPlayer = true 
+            })
+
+            section:AddButton({Text = "Teleport", Risky = true})
+            section:AddButton({Text = "Spectate"})
         end 
     end 
 end 
