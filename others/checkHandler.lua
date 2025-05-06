@@ -13,7 +13,8 @@ end
 
 local cache = {
     [1] = nil,
-    [2] = nil     
+    [2] = nil,
+    [3] = nil    
 }
 
 local findFirstChild = workspace.FindFirstChild
@@ -34,7 +35,7 @@ local skillCheckRemote
 local function connect(signal, callback)
     local connection = signal:Connect(callback)
     --
-    debug("signal connected to: " .. tostring(signal))
+    debug("connect", tostring(signal))
     --
     return connection
 end   
@@ -42,26 +43,32 @@ end
 local function createHandler(object)
     cache[1] = connect(object.ChildAdded, function(child)
         local childName = child.Name 
-        debug("handler: fetching name: " .. childName)
+        debug("childAdded", childName)
         if find(childName, localPlayerName) then 
             skillCheckRemote:FireServer("Hit", childName)
-            debug("handler: fired remote to " .. childName)
+            debug("childAdded", "fired remote")
         end 
     end)
 
-    debug("handler: created cache[1]")
-
     cache[2] = connect(object.DescendantChanged, function(descendant)
         if object.Parent == nil then 
+            debug("descendantChanged", "disconnecting")
             cache[1]:Disconnect()
             cache[2]:Disconnect()
         end 
     end)
-
-
 end 
 
 if hud then 
     createHandler(hud)
 else
-    repeat hud = findFirstChild
+    repeat hud = findFirstChild(playerGui, "HUD") until hud 
+
+    createHandler(hud)
+end 
+
+connect(playerGui.ChildAdded, function(child)
+    if child.Name == "HUD" then 
+        createHandler(child)
+    end 
+end)
