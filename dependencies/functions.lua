@@ -1,11 +1,3 @@
---[[
-    to do list!!
-        replace Vector3.new with newVector3
-        replace Vector2.new with newVector2
-]]
-
-
-
 -- // setting up functions that might not be supported in a env / rstudio environment 
 local setrenderproperty = setrenderproperty or function(drawing : string, key : any, value : any)
     drawing[key] = value 
@@ -34,7 +26,7 @@ local camera = workspace.CurrentCamera
 
 local newInstance = Instance.new 
 local newDrawing = Drawing.new
-local newVector3 = Vector3.new 
+local newVector3 = Vector3.new
 local newVector2 = Vector2.new 
 local wait = task.wait 
 local findFirstChild = workspace.FindFirstChild 
@@ -135,7 +127,7 @@ local library = {
         
         local connection = signal:Connect(callback)
         
-        library.connections[index]
+        library.connections[index] = connection
         
         return connection  
     end 
@@ -242,7 +234,7 @@ local library = {
 
             local screenPos, onScreen = worldToViewportPoint(library.getRoot(library.getCharacter(v)).Position)
             local mousePos = library.getMouseLocation()
-            local magnitude = (Vector2.new(screenPos.X, screenPos.Y) - Vector2.new(mousePos.X, mousePos.Y)).Magnitude
+            local magnitude = (newVector2(screenPos.X, screenPos.Y) - newVector2(mousePos.X, mousePos.Y)).Magnitude
 
             if onScreen and magnitude < shortestDistance then 
                 closestPlayer = v 
@@ -262,7 +254,7 @@ local library = {
             if isA(part, "BasePart") then 
                 local screenPos, onScreen = worldToViewportPoint(part.Position)
                 local mousePos = library.getMouseLocation()
-                local magnitude = (Vector2.new(screenPos.X, screenPos.Y) - Vector2.new(mousePos.X, mousePos.Y)).Magnitude
+                local magnitude = (newVector2(screenPos.X, screenPos.Y) - newVector2(mousePos.X, mousePos.Y)).Magnitude
 
                 if onScreen and magnitude < shortestDistance then 
                     closestPart = part 
@@ -300,42 +292,42 @@ local library = {
 
     function library.scan(insert)
         return {
-            insert.Position + (Vector3.new(insert.Size.X, 0, 0) / 2),
-            insert.Position - (Vector3.new(insert.Size.X, 0, 0) / 2),
-            insert.Position + (Vector3.new(0, insert.Size.Y, 0) / 2),
-            insert.Position - (Vector3.new(0, insert.Size.Y, 0) / 2),
-            insert.Position + (Vector3.new(0, 0, insert.Size.Z) / 2),
-            insert.Position - (Vector3.new(0, 0, insert.Size.Z) / 2),
+            insert.Position + (newVector3(insert.Size.X, 0, 0) / 2),
+            insert.Position - (newVector3(insert.Size.X, 0, 0) / 2),
+            insert.Position + (newVector3(0, insert.Size.Y, 0) / 2),
+            insert.Position - (newVector3(0, insert.Size.Y, 0) / 2),
+            insert.Position + (newVector3(0, 0, insert.Size.Z) / 2),
+            insert.Position - (newVector3(0, 0, insert.Size.Z) / 2),
             insert.Position,
         }
     end 
 
     function library.scanAdvanced(insert)
         return {
-            insert.Position + (Vector3.new(insert.Size.X, 0, 0) / 2),
-            insert.Position - (Vector3.new(insert.Size.X, 0, 0) / 2),
-            insert.Position + (Vector3.new(0, insert.Size.Y, 0) / 2),
-            insert.Position - (Vector3.new(0, insert.Size.Y, 0) / 2),
-            insert.Position + (Vector3.new(0, 0, insert.Size.Z) / 2),
-            insert.Position - (Vector3.new(0, 0, insert.Size.Z) / 2),
-            insert.Position + (Vector3.new(insert.Size.X, insert.Size.Y, 0) / 2),
-            insert.Position - (Vector3.new(insert.Size.X, insert.Size.Y, 0) / 2),
-            insert.Position + (Vector3.new(0, insert.Size.Y, insert.Size.Z) / 2),
-            insert.Position - (Vector3.new(0, insert.Size.Y, insert.Size.Z) / 2),
-            insert.Position + (Vector3.new(insert.Size.X, 0, insert.Size.Z) / 2),
-            insert.Position - (Vector3.new(insert.Size.X, 0, insert.Size.Z) / 2),
-            insert.Position + (Vector3.new(-insert.Size.X, insert.Size.Y, 0) / 2),
-            insert.Position + (Vector3.new(insert.Size.X, -insert.Size.Y, 0) / 2),
-            insert.Position + (Vector3.new(0, -insert.Size.Y, insert.Size.Z) / 2),
-            insert.Position + (Vector3.new(0, insert.Size.Y, -insert.Size.Z) / 2),
-            insert.Position + (Vector3.new(-insert.Size.X, 0, insert.Size.Z) / 2),
-            insert.Position + (Vector3.new(insert.Size.X, 0, -insert.Size.Z) / 2),
-            insert.Position + (Vector3.new(-insert.Size.X, insert.Size.Y, insert.Size.Z) / 2),
-            insert.Position + (Vector3.new(insert.Size.X, -insert.Size.Y, insert.Size.Z) / 2),
-            insert.Position + (Vector3.new(insert.Size.X, insert.Size.Y, -insert.Size.Z) / 2),
-            insert.Position + (Vector3.new(-insert.Size.X, -insert.Size.Y, insert.Size.Z) / 2),
-            insert.Position + (Vector3.new(insert.Size.X, -insert.Size.Y, -insert.Size.Z) / 2),
-            insert.Position + (Vector3.new(-insert.Size.X, insert.Size.Y, -insert.Size.Z) / 2),
+            insert.Position + (newVector3(insert.Size.X, 0, 0) / 2),
+            insert.Position - (newVector3(insert.Size.X, 0, 0) / 2),
+            insert.Position + (newVector3(0, insert.Size.Y, 0) / 2),
+            insert.Position - (newVector3(0, insert.Size.Y, 0) / 2),
+            insert.Position + (newVector3(0, 0, insert.Size.Z) / 2),
+            insert.Position - (newVector3(0, 0, insert.Size.Z) / 2),
+            insert.Position + (newVector3(insert.Size.X, insert.Size.Y, 0) / 2),
+            insert.Position - (newVector3(insert.Size.X, insert.Size.Y, 0) / 2),
+            insert.Position + (newVector3(0, insert.Size.Y, insert.Size.Z) / 2),
+            insert.Position - (newVector3(0, insert.Size.Y, insert.Size.Z) / 2),
+            insert.Position + (newVector3(insert.Size.X, 0, insert.Size.Z) / 2),
+            insert.Position - (newVector3(insert.Size.X, 0, insert.Size.Z) / 2),
+            insert.Position + (newVector3(-insert.Size.X, insert.Size.Y, 0) / 2),
+            insert.Position + (newVector3(insert.Size.X, -insert.Size.Y, 0) / 2),
+            insert.Position + (newVector3(0, -insert.Size.Y, insert.Size.Z) / 2),
+            insert.Position + (newVector3(0, insert.Size.Y, -insert.Size.Z) / 2),
+            insert.Position + (newVector3(-insert.Size.X, 0, insert.Size.Z) / 2),
+            insert.Position + (newVector3(insert.Size.X, 0, -insert.Size.Z) / 2),
+            insert.Position + (newVector3(-insert.Size.X, insert.Size.Y, insert.Size.Z) / 2),
+            insert.Position + (newVector3(insert.Size.X, -insert.Size.Y, insert.Size.Z) / 2),
+            insert.Position + (newVector3(insert.Size.X, insert.Size.Y, -insert.Size.Z) / 2),
+            insert.Position + (newVector3(-insert.Size.X, -insert.Size.Y, insert.Size.Z) / 2),
+            insert.Position + (newVector3(insert.Size.X, -insert.Size.Y, -insert.Size.Z) / 2),
+            insert.Position + (newVector3(-insert.Size.X, insert.Size.Y, -insert.Size.Z) / 2),
             insert.Position + (insert.Size / 2),
             insert.Position - (insert.Size / 2),
             insert.Position,
